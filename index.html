@@ -71,16 +71,22 @@ button:hover{ transform:translateY(-2px); }
 }
 .heroImage img{ width:100%; display:block; }
 
-.photoBox{
-  width:min(640px,96%);
-  margin:20px auto 0;
+/* Square full-size box (for lessurvivors + ohlala) */
+.squareBox{
+  width:min(520px,92%);
+  margin:18px auto 0;
   border-radius:22px;
   overflow:hidden;
-  aspect-ratio:16/9;
+  aspect-ratio:1/1;
   box-shadow:0 18px 60px rgba(0,0,0,.10);
   background:rgba(255,255,255,.65);
 }
-.photoBox img{ width:100%; height:100%; object-fit:cover; display:block; }
+.squareBox img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
 
 /* =========================
    GIFT SLIDE
@@ -210,18 +216,27 @@ button:hover{ transform:translateY(-2px); }
 
   <!-- SLIDE 1 -->
   <div class="slide">
-    <h1>De la part de 💞</h1>
-    <p>Lucie, Anthony, Chloé & Hortense</p>
-    <div class="photoBox">
+    <h1>💞 De la part de</h1>
+    <p>Lucie, Anthony, Chloé & Hortense.</p>
+
+    <!-- lessurvivors: full-size square -->
+    <div class="squareBox">
       <img id="imgGroup" alt="">
     </div>
+
     <button onclick="next()">Débloque la suite 🔓</button>
   </div>
 
   <!-- SLIDE 2 -->
   <div class="slide">
-    <h1>On pense à toi, à ta détente et à ton bien-être...</h1>
-    <p>Donc pour tes <b>27 ans</b>, on te souhaite <b>un crâne bien détendu</b>.</p>
+    <h1>On pense à toi, et on veut que tu te détendes...</h1>
+    <p>Donc pour tes <b>27 ans</b>, on te souhaite.... : <b>un crâne bien détendu.</b> (pas toi ➡️ 💀)</p>
+
+    <!-- new photo: ohlala.jpg -->
+    <div class="squareBox">
+      <img id="imgOhlala" alt="">
+    </div>
+
     <button onclick="next()">Découvre ton cadeau ✨</button>
   </div>
 
@@ -251,17 +266,15 @@ button:hover{ transform:translateY(-2px); }
 <script>
 /* =========================
    MEDIA PATHS (GitHub repo)
-   D'après ta capture: fichiers à la racine:
-   - monanniversaire.png
-   - lessurvivors.jpg
-   - bg.jpg
-   (fallback /images/ si besoin)
+   racine: monanniversaire.png / lessurvivors.jpg / bg.jpg / ohlala.jpg
+   fallback: /images/
    ========================= */
 const MEDIA = {
   bases: ["", "images/"],
   hero: "monanniversaire.png",
   group: "lessurvivors.jpg",
-  bg: "bg.jpg"
+  bg: "bg.jpg",
+  ohlala: "ohlala.jpg"
 };
 
 function setImgWithFallback(id, filename){
@@ -304,6 +317,7 @@ function setBgWithFallback(filename){
   setBgWithFallback(MEDIA.bg);
   setImgWithFallback("imgHero", MEDIA.hero);
   setImgWithFallback("imgGroup", MEDIA.group);
+  setImgWithFallback("imgOhlala", MEDIA.ohlala);
 })();
 
 /* =========================
@@ -329,11 +343,10 @@ const Confetti = (function(){
   const pieces = [];
   const MAX = 180;
 
-  // mode (changes with slides)
-  let activeCount = 180;   // how many to draw
-  let alpha = 0.95;        // global opacity
-  let speedMult = 1.0;     // fall speed multiplier
-  let windMult = 1.0;      // sideways drift multiplier
+  let activeCount = 180;
+  let alpha = 0.95;
+  let speedMult = 1.0;
+  let windMult = 1.0;
 
   function spawn(){
     return {
@@ -354,28 +367,24 @@ const Confetti = (function(){
   for(let i=0;i<MAX;i++) pieces.push(spawn());
 
   function setMode(mode){
-    // mode 0 = strong
-    // mode 1+ = subtle (transparent, less, slower)
     if(mode === 0){
       activeCount = 180;
       alpha = 0.95;
       speedMult = 1.00;
       windMult = 1.00;
     }else{
-      activeCount = 70;    // moins présents
-      alpha = 0.28;        // plus transparent
-      speedMult = 0.45;    // coule moins vite
-      windMult = 0.55;     // moins de drift
+      activeCount = 70;
+      alpha = 0.28;
+      speedMult = 0.45;
+      windMult = 0.55;
     }
   }
 
-  // soft transition (optional)
   let target = {activeCount, alpha, speedMult, windMult};
   function setModeSoft(mode){
     setMode(mode);
     target = {activeCount, alpha, speedMult, windMult};
   }
-  // start strong
   setModeSoft(0);
 
   function lerp(a,b,t){ return a + (b-a)*t; }
@@ -383,7 +392,6 @@ const Confetti = (function(){
   function step(){
     ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
 
-    // ease toward target (so it changes smoothly between slides)
     activeCount = Math.round(lerp(activeCount, target.activeCount, 0.08));
     alpha      = lerp(alpha,      target.alpha,      0.08);
     speedMult  = lerp(speedMult,  target.speedMult,  0.08);
@@ -396,11 +404,9 @@ const Confetti = (function(){
       p.y += p.vy * speedMult;
       p.rot += p.vr;
 
-      // petite brise (beaucoup plus faible en mode soft)
       p.vx += Math.sin(p.y*0.01 + p.rot) * 0.012 * windMult;
 
       if(p.y > window.innerHeight + 40){
-        // respawn from top (plus éparpillé)
         p.y = -30 - Math.random()*220;
         p.x = Math.random()*window.innerWidth;
         p.vy = 1.4 + Math.random()*3.6;
@@ -436,7 +442,6 @@ const Confetti = (function(){
 let current=0;
 const slides=document.querySelectorAll(".slide");
 
-// confetti strong on slide 0, soft from slide 1+
 Confetti.setModeSoft(0);
 
 function next(){
@@ -444,7 +449,6 @@ function next(){
   current++;
   slides[current].classList.add("active");
 
-  // confetti behavior
   Confetti.setModeSoft(current >= 1 ? 1 : 0);
 
   if(slides[current].id==="giftSlide") startMagnetic();
