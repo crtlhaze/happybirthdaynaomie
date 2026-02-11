@@ -6,8 +6,7 @@
 <title>Happy Birthday Naomie 🎂</title>
 
 <style>
-:root{ --bgImg: url("images/bg.jpg"); }
-
+:root{ --bgImg: url("bg.jpg"); }
 *{ box-sizing:border-box; }
 
 body{
@@ -24,6 +23,14 @@ body{
     var(--bgImg);
   background-size:cover;
   background-position:center;
+}
+
+/* CONFETTI CANVAS */
+#confetti{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
 }
 
 .card{
@@ -118,7 +125,6 @@ button:hover{ transform:translateY(-2px); }
   opacity:.95;
 }
 
-/* footer note */
 .giftFootnote{
   position:absolute;
   left:50%;
@@ -188,15 +194,17 @@ button:hover{ transform:translateY(-2px); }
 
 <body>
 
+<canvas id="confetti"></canvas>
+
 <div class="card">
 
   <!-- SLIDE 0 -->
   <div class="slide active">
     <div class="heroImage">
-      <img src="images/monanniversaire.png" alt="">
+      <img id="imgHero" alt="">
     </div>
-    <h1>Joyeux Anniversaire Naomie 🎉</h1>
-    <p>Même si tu es loin, on est près de toi !</p>
+    <h1>Happy Birthday me Chériiiiiiie 🎉</h1>
+    <p>Même si tu es loin, on voulait célébrer ce moment avec toi!</p>
     <button onclick="next()">Débloque la suite 🔓</button>
   </div>
 
@@ -205,7 +213,7 @@ button:hover{ transform:translateY(-2px); }
     <h1>De la part de 💞</h1>
     <p>Lucie, Anthony, Chloé & Hortense</p>
     <div class="photoBox">
-      <img src="images/lessurvivors.jpg" alt="">
+      <img id="imgGroup" alt="">
     </div>
     <button onclick="next()">Débloque la suite 🔓</button>
   </div>
@@ -221,8 +229,7 @@ button:hover{ transform:translateY(-2px); }
   <div class="slide giftSlide" id="giftSlide">
 
     <div class="giftHeader">
-      <!-- removed "(enter)" -->
-      <div class="giftTitle">💆‍♀️ Une Séance de Head Spa Japonais 🌟</div>
+      <div class="giftTitle">💆‍♀️ Une Séance de Head Spa 🌟</div>
 
       <div class="giftStack">
         <div class="giftPill">
@@ -242,19 +249,212 @@ button:hover{ transform:translateY(-2px); }
 </div>
 
 <script>
+/* =========================
+   MEDIA PATHS (GitHub repo)
+   D'après ta capture: fichiers à la racine:
+   - monanniversaire.png
+   - lessurvivors.jpg
+   - bg.jpg
+   (fallback /images/ si besoin)
+   ========================= */
+const MEDIA = {
+  bases: ["", "images/"],
+  hero: "monanniversaire.png",
+  group: "lessurvivors.jpg",
+  bg: "bg.jpg"
+};
+
+function setImgWithFallback(id, filename){
+  const el = document.getElementById(id);
+  if(!el) return;
+
+  let i = 0;
+  const tryNext = () => {
+    if(i >= MEDIA.bases.length) return;
+    el.src = MEDIA.bases[i] + filename;
+    el.onerror = () => {
+      el.onerror = null;
+      i++;
+      tryNext();
+    };
+  };
+  tryNext();
+}
+
+function setBgWithFallback(filename){
+  let i = 0;
+  const tryNext = () => {
+    if(i >= MEDIA.bases.length) return;
+    const url = MEDIA.bases[i] + filename;
+
+    const img = new Image();
+    img.onload = () => {
+      document.documentElement.style.setProperty("--bgImg", `url("${url}")`);
+    };
+    img.onerror = () => {
+      i++;
+      tryNext();
+    };
+    img.src = url;
+  };
+  tryNext();
+}
+
+(function initMedia(){
+  setBgWithFallback(MEDIA.bg);
+  setImgWithFallback("imgHero", MEDIA.hero);
+  setImgWithFallback("imgGroup", MEDIA.group);
+})();
+
+/* =========================
+   CONFETTI (full on slide 0,
+   softer + sparse + slower from slide 1+)
+   ========================= */
+const Confetti = (function(){
+  const c = document.getElementById("confetti");
+  const ctx = c.getContext("2d");
+  const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+
+  function resize(){
+    c.width = Math.floor(window.innerWidth * DPR);
+    c.height = Math.floor(window.innerHeight * DPR);
+    c.style.width = window.innerWidth + "px";
+    c.style.height = window.innerHeight + "px";
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  const colors = ["#ff4d6d","#ffd166","#06d6a0","#118ab2","#9b5de5","#f15bb5","#00bbf9"];
+  const pieces = [];
+  const MAX = 180;
+
+  // mode (changes with slides)
+  let activeCount = 180;   // how many to draw
+  let alpha = 0.95;        // global opacity
+  let speedMult = 1.0;     // fall speed multiplier
+  let windMult = 1.0;      // sideways drift multiplier
+
+  function spawn(){
+    return {
+      x: Math.random()*window.innerWidth,
+      y: -20 - Math.random()*window.innerHeight*0.35,
+      r: 3 + Math.random()*4,
+      w: 6 + Math.random()*8,
+      h: 8 + Math.random()*12,
+      vy: 1.4 + Math.random()*3.6,
+      vx: -0.9 + Math.random()*1.8,
+      rot: Math.random()*Math.PI*2,
+      vr: (-0.10 + Math.random()*0.20),
+      color: colors[(Math.random()*colors.length)|0],
+      shape: Math.random() < 0.55 ? "rect" : "circle"
+    };
+  }
+
+  for(let i=0;i<MAX;i++) pieces.push(spawn());
+
+  function setMode(mode){
+    // mode 0 = strong
+    // mode 1+ = subtle (transparent, less, slower)
+    if(mode === 0){
+      activeCount = 180;
+      alpha = 0.95;
+      speedMult = 1.00;
+      windMult = 1.00;
+    }else{
+      activeCount = 70;    // moins présents
+      alpha = 0.28;        // plus transparent
+      speedMult = 0.45;    // coule moins vite
+      windMult = 0.55;     // moins de drift
+    }
+  }
+
+  // soft transition (optional)
+  let target = {activeCount, alpha, speedMult, windMult};
+  function setModeSoft(mode){
+    setMode(mode);
+    target = {activeCount, alpha, speedMult, windMult};
+  }
+  // start strong
+  setModeSoft(0);
+
+  function lerp(a,b,t){ return a + (b-a)*t; }
+
+  function step(){
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+
+    // ease toward target (so it changes smoothly between slides)
+    activeCount = Math.round(lerp(activeCount, target.activeCount, 0.08));
+    alpha      = lerp(alpha,      target.alpha,      0.08);
+    speedMult  = lerp(speedMult,  target.speedMult,  0.08);
+    windMult   = lerp(windMult,   target.windMult,   0.08);
+
+    for(let i=0;i<activeCount;i++){
+      const p = pieces[i];
+
+      p.x += p.vx * windMult;
+      p.y += p.vy * speedMult;
+      p.rot += p.vr;
+
+      // petite brise (beaucoup plus faible en mode soft)
+      p.vx += Math.sin(p.y*0.01 + p.rot) * 0.012 * windMult;
+
+      if(p.y > window.innerHeight + 40){
+        // respawn from top (plus éparpillé)
+        p.y = -30 - Math.random()*220;
+        p.x = Math.random()*window.innerWidth;
+        p.vy = 1.4 + Math.random()*3.6;
+        p.vx = -0.9 + Math.random()*1.8;
+      }
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = alpha;
+
+      ctx.fillStyle = p.color;
+      if(p.shape === "rect"){
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      }else{
+        ctx.beginPath();
+        ctx.arc(0,0,p.r,0,Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    requestAnimationFrame(step);
+  }
+  step();
+
+  return { setModeSoft };
+})();
+
+/* =========================
+   SLIDES
+   ========================= */
 let current=0;
 const slides=document.querySelectorAll(".slide");
+
+// confetti strong on slide 0, soft from slide 1+
+Confetti.setModeSoft(0);
 
 function next(){
   slides[current].classList.remove("active");
   current++;
   slides[current].classList.add("active");
+
+  // confetti behavior
+  Confetti.setModeSoft(current >= 1 ? 1 : 0);
+
   if(slides[current].id==="giftSlide") startMagnetic();
 }
 
 /* =========================
    FLOAT / MAGNETIC ENGINE
-   Better mix + around title
+   10 options + 10 emojis total
+   - 5 options + 5 emojis en haut
+   - 5 options + 5 emojis en bas
    ========================= */
 
 const items=[
@@ -271,7 +471,7 @@ const items=[
 ];
 
 const baseEmojis=["🧖‍♀️","🍃","🧘‍♀️","☁️","🤍"];
-const emojis = baseEmojis.flatMap(e => [e,e,e,e]); // each emoji appears 4 times
+const emojis = baseEmojis.flatMap(e => [e,e]); // 10
 
 let started=false;
 const blobs=[];
@@ -302,65 +502,72 @@ function startMagnetic(){
   });
   zone.addEventListener("mouseleave",()=>pointer.active=false);
 
-  // Center closer to title so it "orbits the gift"
-  const ORBIT_CENTER = { x: 50, y: 34 };
-
-  // Keep clear: title line + pill + footnote
+  const FORBIDDEN = [
+    {x1:10, x2:90, y1:24, y2:58},
+    {x1:12, x2:88, y1:86, y2:96}
+  ];
+  function insideRect(x,y,r){
+    return x>=r.x1 && x<=r.x2 && y>=r.y1 && y<=r.y2;
+  }
   function isForbidden(x,y){
-    const inTitleLine = (x>10 && x<90 && y>24 && y<40); // title band
-    const inPill      = (x>16 && x<84 && y>40 && y<56); // pill band
-    const inFoot      = (x>12 && x<88 && y>86);         // footer band
-    return inTitleLine || inPill || inFoot;
+    return FORBIDDEN.some(r=>insideRect(x,y,r));
   }
 
-  // Build a single mixed list (words + emojis), shuffle it
-  const mixed = [];
-  items.forEach(t => mixed.push({type:"tag", text:t}));
-  emojis.forEach(e => mixed.push({type:"emojiFloat", text:e}));
-  shuffle(mixed);
+  const TOP = { x1:6, x2:94, y1:8,  y2:22 };
+  const BOTTOM = { x1:6, x2:94, y1:60, y2:84 };
 
-  function create(entry,i,total){
+  function pickSpawn(area){
+    let x,y,tries=0;
+    do{
+      x = rand(area.x1, area.x2);
+      y = rand(area.y1, area.y2);
+      tries++;
+    } while(isForbidden(x,y) && tries<120);
+    return {x,y};
+  }
+
+  const topEntries = [];
+  const bottomEntries = [];
+
+  const itemsTop = items.slice(0,5);
+  const itemsBottom = items.slice(5,10);
+
+  const emojisTop = emojis.slice(0,5);
+  const emojisBottom = emojis.slice(5,10);
+
+  itemsTop.forEach(t => topEntries.push({type:"tag", text:t}));
+  emojisTop.forEach(e => topEntries.push({type:"emojiFloat", text:e}));
+
+  itemsBottom.forEach(t => bottomEntries.push({type:"tag", text:t}));
+  emojisBottom.forEach(e => bottomEntries.push({type:"emojiFloat", text:e}));
+
+  shuffle(topEntries);
+  shuffle(bottomEntries);
+
+  function create(entry,i,area,delayBase){
     const el=document.createElement("div");
     el.className=entry.type;
     el.textContent=entry.text;
     zone.appendChild(el);
 
-    // Two-ring orbit to look more "mixed"
-    const ring = (i % 2); // 0 or 1
-    const baseRadius = ring===0 ? rand(18,28) : rand(28,40);
-
-    // spread evenly + jitter
-    const angle = (i/total) * Math.PI * 2 + rand(-0.22,0.22);
-
-    let baseX = ORBIT_CENTER.x + Math.cos(angle)*baseRadius;
-    let baseY = ORBIT_CENTER.y + Math.sin(angle)*baseRadius;
-
-    // if forbidden, push outwards along the angle (so it stays around)
-    let tries=0;
-    while(isForbidden(baseX,baseY) && tries<90){
-      baseX += Math.cos(angle) * 1.2;
-      baseY += Math.sin(angle) * 1.2;
-      tries++;
-    }
-
-    // clamp to zone
-    baseX = clamp(baseX, 4, 96);
-    baseY = clamp(baseY, 8, 86);
+    const s = pickSpawn(area);
 
     const obj={
       el,
-      baseX, baseY,
-      x:baseX, y:baseY,
+      baseX:s.x, baseY:s.y,
+      x:s.x, y:s.y,
       vx:0, vy:0,
       phase:rand(0,Math.PI*2),
-      drift:rand(0.10,0.24)
+      drift:rand(0.10,0.22),
+      area
     };
 
     blobs.push(obj);
-    setTimeout(()=>el.classList.add("show"),160+i*55);
+    setTimeout(()=>el.classList.add("show"), delayBase + i*55);
   }
 
-  mixed.forEach((entry,i)=>create(entry,i,mixed.length));
+  topEntries.forEach((entry,i)=>create(entry,i,TOP,140));
+  bottomEntries.forEach((entry,i)=>create(entry,i,BOTTOM,420));
 
   animate();
 }
@@ -369,41 +576,52 @@ function animate(){
   requestAnimationFrame(animate);
   const t = performance.now();
 
+  const FORBIDDEN = [
+    {x1:10, x2:90, y1:24, y2:58},
+    {x1:12, x2:88, y1:86, y2:96}
+  ];
+  function insideRect(x,y,r){
+    return x>=r.x1 && x<=r.x2 && y>=r.y1 && y<=r.y2;
+  }
+  function isForbidden(x,y){
+    return FORBIDDEN.some(r=>insideRect(x,y,r));
+  }
+
   blobs.forEach(b=>{
-    // levitation
-    const levX = Math.sin(t*0.001 + b.phase) * (0.35 * (b.drift*10));
-    const levY = Math.cos(t*0.00115 + b.phase) * (0.35 * (b.drift*10));
+    const levX = Math.sin(t*0.001 + b.phase) * (0.55 * (b.drift*10));
+    const levY = Math.cos(t*0.0011 + b.phase) * (0.40 * (b.drift*10));
 
     const targetX = b.baseX + levX;
     const targetY = b.baseY + levY;
 
-    // spring
     b.vx += (targetX - b.x) * 0.02;
     b.vy += (targetY - b.y) * 0.02;
 
-    // repel mouse (bigger radius)
     if(pointer.active){
       const dx=b.x-pointer.x;
       const dy=b.y-pointer.y;
       const dist=Math.sqrt(dx*dx+dy*dy);
-
-      if(dist < 24){
+      if(dist < 26){
         const safeDist = Math.max(dist, 0.001);
-        b.vx += (dx/safeDist) * 0.58;
-        b.vy += (dy/safeDist) * 0.58;
+        b.vx += (dx/safeDist) * 0.62;
+        b.vy += (dy/safeDist) * 0.62;
       }
     }
 
-    b.vx *= 0.9;
-    b.vy *= 0.9;
+    b.vx *= 0.90;
+    b.vy *= 0.90;
     b.x += b.vx;
     b.y += b.vy;
 
-    b.x = clamp(b.x, 4, 96);
-    b.y = clamp(b.y, 6, 88);
+    b.x = clamp(b.x, b.area.x1, b.area.x2);
+    b.y = clamp(b.y, b.area.y1, b.area.y2);
 
-    // keep away from footer
-    if(b.y > 87) b.y = 87;
+    if(isForbidden(b.x,b.y)){
+      const sX = rand(b.area.x1, b.area.x2);
+      const sY = rand(b.area.y1, b.area.y2);
+      b.x = sX; b.y = sY;
+      b.baseX = sX; b.baseY = sY;
+    }
 
     b.el.style.left = b.x + "%";
     b.el.style.top  = b.y + "%";
