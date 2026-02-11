@@ -1,77 +1,370 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Happy Birthday Naomie</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Naomie 🎂</title>
+  <style>
+    :root{
+      --bg:#070a16;
+      --glass: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.14);
+      --text:#f3f6ff;
+      --muted: rgba(243,246,255,.72);
+      --pink:#ff4fd8;
+      --lime:#a8ff5a;
+      --cyan:#32e7ff;
+      --purple:#7c5cff;
+      --orange:#ff9c3a;
+    }
 
-<style>
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background: radial-gradient(circle at 20% 20%, #4b2e83, transparent 40%),
-              radial-gradient(circle at 80% 80%, #1e9e7a, transparent 40%),
-              #0b0f1a;
-  font-family: system-ui, -apple-system, sans-serif;
-  color:white;
-  text-align:center;
-}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.34), transparent 60%),
+        radial-gradient(900px 600px at 80% 90%, rgba(50,231,255,.18), transparent 60%),
+        radial-gradient(650px 450px at 70% 20%, rgba(255,79,216,.22), transparent 60%),
+        radial-gradient(650px 450px at 25% 80%, rgba(168,255,90,.12), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      overflow-x:hidden;
+    }
 
-.card{
-  background:rgba(255,255,255,0.05);
-  padding:40px;
-  border-radius:20px;
-  backdrop-filter: blur(10px);
-  max-width:500px;
-}
+    /* Sparkle cursor */
+    .sparkle{
+      position:fixed;
+      width:10px; height:10px;
+      border-radius:999px;
+      pointer-events:none;
+      mix-blend-mode: screen;
+      filter: blur(.1px);
+      animation: pop .7s ease forwards;
+      z-index: 9999;
+    }
+    @keyframes pop{
+      0%{ transform: translate(-50%,-50%) scale(.2); opacity:0; }
+      15%{ opacity:1; }
+      100%{ transform: translate(-50%,-50%) scale(1.6); opacity:0; }
+    }
 
-h1{
-  font-size:42px;
-  margin-bottom:10px;
-}
+    /* Layout */
+    .wrap{
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      padding:22px 14px;
+      position:relative;
+      isolation:isolate;
+    }
 
-p{
-  opacity:0.8;
-}
+    /* Floating bubbles */
+    .bubbles{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      overflow:hidden;
+    }
+    .bubble{
+      position:absolute;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), rgba(255,255,255,.02));
+      filter: blur(.1px);
+      opacity:.55;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp{
+      from{ transform: translateY(110vh) translateX(0); }
+      to{ transform: translateY(-30vh) translateX(40px); }
+    }
 
-button{
-  margin-top:20px;
-  padding:12px 20px;
-  border:none;
-  border-radius:12px;
-  font-weight:bold;
-  background:#7c5cff;
-  color:white;
-  cursor:pointer;
-}
+    .card{
+      width:min(820px, 94vw);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid var(--stroke);
+      border-radius:26px;
+      box-shadow: 0 20px 80px rgba(0,0,0,.45);
+      padding:22px;
+      position:relative;
+      overflow:hidden;
+      z-index:2;
+      backdrop-filter: blur(10px);
+    }
 
-button:hover{
-  opacity:0.9;
-}
+    .toprow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .badge{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color: rgba(243,246,255,.78);
+      user-select:none;
+    }
+    .progress{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .dot.on{
+      background: linear-gradient(135deg, var(--pink), var(--cyan));
+      border-color: rgba(255,255,255,.35);
+      box-shadow: 0 0 18px rgba(255,79,216,.25);
+    }
 
-.hidden{
-  display:none;
-}
-</style>
-</head>
+    .stage{
+      position:relative;
+      border-radius:20px;
+      background: rgba(0,0,0,.14);
+      border:1px solid rgba(255,255,255,.10);
+      padding:22px;
+      min-height:360px;
+      overflow:hidden;
+    }
 
-<body>
+    .title{
+      font-size: clamp(26px, 4vw, 44px);
+      line-height:1.05;
+      margin: 6px 0 10px;
+    }
+    .subtitle{
+      margin:0 0 14px;
+      color: var(--muted);
+      line-height:1.4;
+      font-size: 16px;
+    }
 
-<div class="card">
-  <h1>🎉 Happy Birthday Naomie</h1>
-  <p>J’ai quelque chose pour toi…</p>
-  <button onclick="reveal()">Clique ici</button>
-  <p id="message" class="hidden">Surprise 💜</p>
-</div>
+    .ctaRow{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
 
-<script>
-function reveal(){
-  document.getElementById("message").classList.remove("hidden");
-}
-</script>
+    button{
+      border:0;
+      cursor:pointer;
+      padding:12px 16px;
+      border-radius:14px;
+      font-weight:800;
+      font-size:15px;
+      color:var(--text);
+      background: linear-gradient(135deg, var(--purple), #97b7ff);
+      box-shadow: 0 12px 35px rgba(124,92,255,.35);
+      transition: transform .12s ease, filter .12s ease;
+      user-select:none;
+    }
+    button:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    button:active{ transform: translateY(0px) scale(.99); }
 
-</body>
-</html>
+    .ghost{
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:none;
+      font-weight:700;
+    }
+
+    /* Shake effect */
+    .shake{
+      animation: shake .35s ease both;
+    }
+    @keyframes shake{
+      0%{ transform: translateX(0); }
+      25%{ transform: translateX(-6px); }
+      50%{ transform: translateX(6px); }
+      75%{ transform: translateX(-4px); }
+      100%{ transform: translateX(0); }
+    }
+
+    /* Slides */
+    .slide{
+      display:none;
+      gap:18px;
+      align-items:center;
+    }
+    .slide.on{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:18px;
+    }
+    @media (max-width: 760px){
+      .slide.on{ grid-template-columns: 1fr; }
+      .stage{ min-height: 520px; }
+    }
+
+    /* Photo frame */
+    .photoFrame{
+      position:relative;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.14), rgba(255,255,255,.02)),
+        rgba(0,0,0,.18);
+      overflow:hidden;
+      min-height: 260px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+    }
+    .photoFrame img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      opacity: .98;
+    }
+    .placeholder{
+      display:grid;
+      place-items:center;
+      height:100%;
+      padding:18px;
+      color: rgba(243,246,255,.75);
+      text-align:center;
+      font-weight:700;
+    }
+    .placeholder small{
+      display:block;
+      margin-top:8px;
+      font-weight:600;
+      color: rgba(243,246,255,.62);
+    }
+
+    .signature{
+      margin-top:10px;
+      display:flex;
+      justify-content:flex-end;
+      font-weight:900;
+      letter-spacing:.08em;
+      color: rgba(243,246,255,.85);
+    }
+    .signature span{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.16);
+    }
+
+    /* Stickers */
+    .stickers{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      opacity:.95;
+    }
+    .st{
+      position:absolute;
+      padding:10px 12px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:12px;
+      letter-spacing:.08em;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(8px);
+      transform: rotate(-6deg);
+      user-select:none;
+      box-shadow: 0 12px 40px rgba(0,0,0,.20);
+    }
+    .st.pink{ color:#ffd2f6; }
+    .st.cyan{ color:#cfffff; }
+    .st.lime{ color:#e6ffd0; }
+    .st.orange{ color:#ffe5c7; }
+
+    /* Cloud reveal */
+    .cloudWrap{
+      position:relative;
+      width:100%;
+      min-height: 280px;
+      display:grid;
+      place-items:center;
+    }
+    .cloud{
+      position:relative;
+      width:min(520px, 92%);
+      height:190px;
+      background: rgba(255,255,255,.92);
+      border-radius:999px;
+      box-shadow: 0 22px 70px rgba(0,0,0,.35);
+      border: 1px solid rgba(0,0,0,.06);
+      overflow:hidden;
+    }
+    .cloud:before,.cloud:after{
+      content:"";
+      position:absolute;
+      background: rgba(255,255,255,.96);
+      border-radius:999px;
+      box-shadow: inset 0 -10px 30px rgba(0,0,0,.05);
+    }
+    .cloud:before{
+      width:200px; height:200px;
+      left:40px; top:-70px;
+    }
+    .cloud:after{
+      width:240px; height:240px;
+      right:30px; top:-90px;
+    }
+    .cloudFace{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      font-weight:1000;
+      color: rgba(20,20,30,.72);
+      z-index:2;
+      text-align:center;
+      padding:16px;
+    }
+    .cloudFace .eyes{
+      font-size:24px;
+      letter-spacing:.2em;
+    }
+    .cloudFace .mouth{
+      margin-top:8px;
+      font-size:14px;
+      opacity:.75;
+      font-weight:900;
+      letter-spacing:.06em;
+    }
+
+    /* emerging gift */
+    .gift{
+      position:absolute;
+      left:50%;
+      top:60%;
+      transform: translate(-50%, 40px) scale(.92);
+      opacity:0;
+      display:grid;
+      gap:10px;
+      place-items:center;
+      z-index:3;
+      transition: transform .6s cubic-bezier(.2,.9,.2,1), opacity .35s ease;
+      width:min(520px, 92%);
+    }
+    .gift.show{
+      opacity:1;
+      transform: translate(-50%, -80px) sca
+::contentReference[oaicite:0]{index=0}
