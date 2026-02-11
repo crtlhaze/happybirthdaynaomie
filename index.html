@@ -8,15 +8,18 @@
 <style>
 :root{ --bgImg: url("images/bg.jpg"); }
 
+*{ box-sizing:border-box; }
+
 body{
   margin:0;
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-family:system-ui,-apple-system;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
   color:#111;
   background:
+    radial-gradient(1200px 500px at 50% 60%, rgba(0,0,0,.08), transparent 65%),
     linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.72)),
     var(--bgImg);
   background-size:cover;
@@ -68,68 +71,118 @@ button:hover{ transform:translateY(-2px); }
   overflow:hidden;
   aspect-ratio:16/9;
   box-shadow:0 18px 60px rgba(0,0,0,.10);
+  background:rgba(255,255,255,.65);
 }
-.photoBox img{ width:100%; height:100%; object-fit:cover; }
+.photoBox img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-/* Gift slide */
+/* =========================
+   GIFT SLIDE
+   ========================= */
+
 .giftSlide{
   position:relative;
-  min-height:540px;
+  min-height:560px;
+  padding:18px 10px 10px;
+}
+
+.giftHeader{
+  position:absolute;
+  left:50%;
+  top:40%;
+  transform:translate(-50%,-50%);
+  z-index:10;
+  width:100%;
+  pointer-events:none;
 }
 
 .giftTitle{
-  font-size:28px;
+  font-size:34px;
   font-weight:1000;
-  position:relative;
-  z-index:5;
+  margin:0 0 14px;
+  letter-spacing:-.2px;
 }
 
-.centerStack{
-  position:relative;
-  z-index:5;
-  margin-top:20px;
+.giftStack{
+  width:min(650px,92%);
+  margin:0 auto;
   display:grid;
-  gap:16px;
+  gap:14px;
 }
 
-.centerBox{
-  padding:18px;
-  border-radius:22px;
-  background:rgba(255,255,255,.75);
-  box-shadow:0 18px 60px rgba(0,0,0,.10);
+.giftPill{
+  padding:16px 18px;
+  border-radius:999px;
+  background:rgba(255,255,255,.88);
+  box-shadow:0 16px 55px rgba(0,0,0,.10);
+  font-weight:650;
+  opacity:.95;
 }
 
+/* footer note */
+.giftFootnote{
+  position:absolute;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  width:min(650px,92%);
+  font-size:13px;
+  opacity:.65;
+  z-index:10;
+  pointer-events:none;
+}
+.giftFootnote b{ font-weight:900; }
+
+/* bigger hover surface */
 .floatZone{
   position:absolute;
-  inset:0;
+  inset:-22px;
   pointer-events:auto;
   z-index:2;
 }
 
+/* floating items */
 .tag, .emojiFloat{
   position:absolute;
   transform:translate(-50%,-50%);
   pointer-events:none;
   opacity:0;
-  transition:.5s;
+  transition:opacity .55s ease, transform .55s ease;
+  will-change:transform,left,top;
 }
 
+/* options: smaller font, no white pill */
 .tag{
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.85);
-  font-weight:900;
-  font-size:14px;
+  padding:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  font-weight:550;
+  font-size:12px;
   white-space:nowrap;
-  box-shadow:0 18px 50px rgba(0,0,0,.10);
+  opacity:.9;
+  text-shadow:0 10px 22px rgba(0,0,0,.10);
 }
 
 .emojiFloat{
-  font-size:26px;
+  font-size:22px;
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,.12));
+  opacity:.9;
 }
 
-.tag.show, .emojiFloat.show{ opacity:1; }
+.tag.show, .emojiFloat.show{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+}
 
+@media (max-width:520px){
+  .card{ padding:22px; }
+  h1{ font-size:28px; }
+  .giftTitle{ font-size:24px; }
+  .giftPill{ border-radius:22px; }
+  .giftSlide{ min-height:590px; }
+  .giftHeader{ top:42%; }
+  .tag{ font-size:11px; }
+}
 </style>
 </head>
 
@@ -137,50 +190,54 @@ button:hover{ transform:translateY(-2px); }
 
 <div class="card">
 
-<!-- SLIDE 0 -->
-<div class="slide active">
-  <div class="heroImage">
-    <img src="images/monanniversaire.png" alt="">
-  </div>
-  <h1>Joyeux Anniversaire Naomie 🎉</h1>
-  <p>Même si tu es loin, on est près de toi !</p>
-  <button onclick="next()">Débloque la suite 🔓</button>
-</div>
-
-<!-- SLIDE 1 -->
-<div class="slide">
-  <h1>De la part de 💞</h1>
-  <p>Lucie, Anthony, Chloé & Hortense</p>
-  <div class="photoBox">
-    <img src="images/lessurvivors.jpg" alt="">
-  </div>
-  <button onclick="next()">Débloque la suite 🔓</button>
-</div>
-
-<!-- SLIDE 2 -->
-<div class="slide">
-  <h1>On pense à toi, à ta détente et à ton bien-être...</h1>
-  <p>Donc pour tes <b>27 ans</b>, on te souhaite <b>un crâne bien détendu</b>.</p>
-  <button onclick="next()">Découvre ton cadeau ✨</button>
-</div>
-
-<!-- SLIDE 3 -->
-<div class="slide giftSlide" id="giftSlide">
-
-  <div class="giftTitle">🎁 Séance de Head Spa Japonais</div>
-
-  <div class="centerStack">
-    <div class="centerBox">
-      Une séance complète incluant détente profonde et soin capillaire.
+  <!-- SLIDE 0 -->
+  <div class="slide active">
+    <div class="heroImage">
+      <img src="images/monanniversaire.png" alt="">
     </div>
-    <div class="centerBox">
-      Merci de contacter <b>Mme Lucie</b> pour récupérer les informations.
-    </div>
+    <h1>Joyeux Anniversaire Naomie 🎉</h1>
+    <p>Même si tu es loin, on est près de toi !</p>
+    <button onclick="next()">Débloque la suite 🔓</button>
   </div>
 
-  <div class="floatZone" id="floatZone"></div>
+  <!-- SLIDE 1 -->
+  <div class="slide">
+    <h1>De la part de 💞</h1>
+    <p>Lucie, Anthony, Chloé & Hortense</p>
+    <div class="photoBox">
+      <img src="images/lessurvivors.jpg" alt="">
+    </div>
+    <button onclick="next()">Débloque la suite 🔓</button>
+  </div>
 
-</div>
+  <!-- SLIDE 2 -->
+  <div class="slide">
+    <h1>On pense à toi, à ta détente et à ton bien-être...</h1>
+    <p>Donc pour tes <b>27 ans</b>, on te souhaite <b>un crâne bien détendu</b>.</p>
+    <button onclick="next()">Découvre ton cadeau ✨</button>
+  </div>
+
+  <!-- SLIDE 3 -->
+  <div class="slide giftSlide" id="giftSlide">
+
+    <div class="giftHeader">
+      <!-- removed "(enter)" -->
+      <div class="giftTitle">💆‍♀️ Une Séance de Head Spa Japonais 🌟</div>
+
+      <div class="giftStack">
+        <div class="giftPill">
+          Une séance complète incluant détente profonde et soin capillaire.
+        </div>
+      </div>
+    </div>
+
+    <div class="giftFootnote">
+      Merci de contacter <b>Mme Lucie Dubourdieu</b> pour récupérer votre lot 👩‍✈️
+    </div>
+
+    <div class="floatZone" id="floatZone"></div>
+
+  </div>
 
 </div>
 
@@ -195,22 +252,26 @@ function next(){
   if(slides[current].id==="giftSlide") startMagnetic();
 }
 
-/* Magnetic engine */
+/* =========================
+   FLOAT / MAGNETIC ENGINE
+   Better mix + around title
+   ========================= */
 
 const items=[
-"Bain des pieds prélassant aux herbes",
-"Massage relaxant Guasha",
-"Stimulation avec accessoires",
-"Anneau doré + infusion chaude",
-"Nettoyage / Exfoliation",
-"Serviette crépitante & Shiatsu Bambou",
-"Masque hydratant sous vapeur",
-"Modelage bras Hot Stone",
-"Gelée capillaire Aloe",
-"Étirements serviette chaude"
+  "Bain des pieds prélassant aux herbes",
+  "Massage relaxant Guasha",
+  "Stimulation avec accessoires",
+  "Anneau doré + infusion chaude",
+  "Nettoyage / Exfoliation",
+  "Serviette crépitante & Shiatsu Bambou",
+  "Masque hydratant sous vapeur",
+  "Modelage bras Hot Stone",
+  "Gelée capillaire Aloe",
+  "Étirements serviette chaude"
 ];
 
-const emojis=["🧖‍♀️","🍃","🧘‍♀️","☁️","🤍"];
+const baseEmojis=["🧖‍♀️","🍃","🧘‍♀️","☁️","🤍"];
+const emojis = baseEmojis.flatMap(e => [e,e,e,e]); // each emoji appears 4 times
 
 let started=false;
 const blobs=[];
@@ -218,6 +279,14 @@ const pointer={x:-9999,y:-9999,active:false};
 
 function rand(a,b){return Math.random()*(b-a)+a;}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
 
 function startMagnetic(){
   if(started) return;
@@ -233,56 +302,111 @@ function startMagnetic(){
   });
   zone.addEventListener("mouseleave",()=>pointer.active=false);
 
-  function create(type,text,i){
-    const el=document.createElement("div");
-    el.className=type;
-    el.textContent=text;
-    zone.appendChild(el);
+  // Center closer to title so it "orbits the gift"
+  const ORBIT_CENTER = { x: 50, y: 34 };
 
-    const baseX=rand(5,95);
-    const baseY=rand(5,95);
-
-    const obj={el,baseX,baseY,x:baseX,y:baseY,vx:0,vy:0};
-    blobs.push(obj);
-
-    setTimeout(()=>el.classList.add("show"),200+i*200);
+  // Keep clear: title line + pill + footnote
+  function isForbidden(x,y){
+    const inTitleLine = (x>10 && x<90 && y>24 && y<40); // title band
+    const inPill      = (x>16 && x<84 && y>40 && y<56); // pill band
+    const inFoot      = (x>12 && x<88 && y>86);         // footer band
+    return inTitleLine || inPill || inFoot;
   }
 
-  items.forEach((t,i)=>create("tag",t,i));
-  emojis.forEach((e,i)=>create("emojiFloat",e,i+items.length));
+  // Build a single mixed list (words + emojis), shuffle it
+  const mixed = [];
+  items.forEach(t => mixed.push({type:"tag", text:t}));
+  emojis.forEach(e => mixed.push({type:"emojiFloat", text:e}));
+  shuffle(mixed);
+
+  function create(entry,i,total){
+    const el=document.createElement("div");
+    el.className=entry.type;
+    el.textContent=entry.text;
+    zone.appendChild(el);
+
+    // Two-ring orbit to look more "mixed"
+    const ring = (i % 2); // 0 or 1
+    const baseRadius = ring===0 ? rand(18,28) : rand(28,40);
+
+    // spread evenly + jitter
+    const angle = (i/total) * Math.PI * 2 + rand(-0.22,0.22);
+
+    let baseX = ORBIT_CENTER.x + Math.cos(angle)*baseRadius;
+    let baseY = ORBIT_CENTER.y + Math.sin(angle)*baseRadius;
+
+    // if forbidden, push outwards along the angle (so it stays around)
+    let tries=0;
+    while(isForbidden(baseX,baseY) && tries<90){
+      baseX += Math.cos(angle) * 1.2;
+      baseY += Math.sin(angle) * 1.2;
+      tries++;
+    }
+
+    // clamp to zone
+    baseX = clamp(baseX, 4, 96);
+    baseY = clamp(baseY, 8, 86);
+
+    const obj={
+      el,
+      baseX, baseY,
+      x:baseX, y:baseY,
+      vx:0, vy:0,
+      phase:rand(0,Math.PI*2),
+      drift:rand(0.10,0.24)
+    };
+
+    blobs.push(obj);
+    setTimeout(()=>el.classList.add("show"),160+i*55);
+  }
+
+  mixed.forEach((entry,i)=>create(entry,i,mixed.length));
 
   animate();
 }
 
 function animate(){
   requestAnimationFrame(animate);
+  const t = performance.now();
 
   blobs.forEach(b=>{
-    // spring to base
-    b.vx+=(b.baseX-b.x)*0.02;
-    b.vy+=(b.baseY-b.y)*0.02;
+    // levitation
+    const levX = Math.sin(t*0.001 + b.phase) * (0.35 * (b.drift*10));
+    const levY = Math.cos(t*0.00115 + b.phase) * (0.35 * (b.drift*10));
 
-    // repel mouse
+    const targetX = b.baseX + levX;
+    const targetY = b.baseY + levY;
+
+    // spring
+    b.vx += (targetX - b.x) * 0.02;
+    b.vy += (targetY - b.y) * 0.02;
+
+    // repel mouse (bigger radius)
     if(pointer.active){
       const dx=b.x-pointer.x;
       const dy=b.y-pointer.y;
       const dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<15){
-        b.vx+=(dx/dist)*0.4;
-        b.vy+=(dy/dist)*0.4;
+
+      if(dist < 24){
+        const safeDist = Math.max(dist, 0.001);
+        b.vx += (dx/safeDist) * 0.58;
+        b.vy += (dy/safeDist) * 0.58;
       }
     }
 
-    b.vx*=0.9;
-    b.vy*=0.9;
-    b.x+=b.vx;
-    b.y+=b.vy;
+    b.vx *= 0.9;
+    b.vy *= 0.9;
+    b.x += b.vx;
+    b.y += b.vy;
 
-    b.x=clamp(b.x,5,95);
-    b.y=clamp(b.y,5,95);
+    b.x = clamp(b.x, 4, 96);
+    b.y = clamp(b.y, 6, 88);
 
-    b.el.style.left=b.x+"%";
-    b.el.style.top=b.y+"%";
+    // keep away from footer
+    if(b.y > 87) b.y = 87;
+
+    b.el.style.left = b.x + "%";
+    b.el.style.top  = b.y + "%";
   });
 }
 </script>
