@@ -33,9 +33,6 @@ body{
   z-index:9999;
 }
 
-/* hidden audio */
-#audioBday{ display:none; }
-
 .card{
   width:min(820px,92vw);
   background:rgba(255,255,255,.72);
@@ -59,7 +56,7 @@ button{
   cursor:pointer;
   font-weight:900;
   background:linear-gradient(135deg,#E35619,#FFBDF8);
-  color:#fff; /* ✅ white */
+  color:#fff;
   box-shadow:0 14px 40px rgba(0,0,0,.12);
   transition:.2s;
 }
@@ -87,100 +84,50 @@ button:hover{ transform:translateY(-2px); }
 .photoBox img{
   width:100%;
   height:100%;
-  object-fit:contain; /* ✅ full side (no crop) */
+  object-fit:contain; /* no crop */
   display:block;
   background:rgba(255,255,255,.75);
 }
 
-/* ===== SQUARE PHOTO BOX (lessurvivors) ===== */
+/* square for group */
 .photoBox.square{
-  aspect-ratio:1/1; /* ✅ full square */
+  aspect-ratio:1/1;
   width:min(520px,92%);
 }
 
 /* =========================
-   REVEAL ANIMATION (coffre)
-   ========================= */
-.revealOverlay{
-  position:absolute;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(255,255,255,.55);
-  backdrop-filter:blur(10px);
-  z-index:50;
-}
-.revealOverlay.show{ display:flex; }
-
-.chest{
-  width:140px;
-  height:110px;
-  position:relative;
-  transform:translateY(6px);
-  filter:drop-shadow(0 22px 40px rgba(0,0,0,.20));
-}
-.chest .base{
-  position:absolute;
-  left:0; right:0;
-  bottom:0;
-  height:70px;
-  border-radius:18px;
-  background:linear-gradient(135deg,#E35619,#FFBDF8);
-}
-.chest .lid{
-  position:absolute;
-  left:0; right:0;
-  top:0;
-  height:55px;
-  border-radius:18px;
-  transform-origin:50% 100%;
-  background:linear-gradient(135deg,#FFBDF8,#E35619);
-  transform:rotateX(0deg);
-}
-.revealOverlay.show .lid{
-  animation:openLid .9s cubic-bezier(.2,.9,.2,1) forwards;
-}
-@keyframes openLid{
-  0%{ transform:rotateX(0deg) translateY(0); }
-  60%{ transform:rotateX(75deg) translateY(-4px); }
-  100%{ transform:rotateX(95deg) translateY(-6px); }
-}
-.revealText{
-  margin-top:18px;
-  font-weight:900;
-  letter-spacing:-.2px;
-  opacity:.92;
-}
-
-/* =========================
-   GIFT SLIDE
+   GIFT SLIDE (clean hierarchy)
    ========================= */
 .giftSlide{
   position:relative;
-  min-height:600px;
-  padding:16px 10px 12px;
+  min-height:610px;
+  padding:18px 10px 14px;
 }
 
-.giftHeader{
+/* background zone for floating stuff (full slide) */
+.floatZone{
   position:absolute;
-  left:50%;
-  top:44%;
-  transform:translate(-50%,-50%);
-  z-index:10;
-  width:100%;
-  pointer-events:none;
+  inset:-22px;
+  pointer-events:auto;
+  z-index:2;            /* behind text */
 }
 
+.giftContent{
+  position:relative;
+  z-index:10;           /* above float */
+  width:100%;
+}
+
+/* Title */
 .giftTitle{
   font-size:36px;
   font-weight:1000;
-  margin:0 0 14px;
+  margin:0 0 12px;
   letter-spacing:-.4px;
   line-height:1.05;
 }
 
-/* ✅ highlighted + fretille */
+/* highlighted + fretille just on the core phrase */
 .giftTitle .wiggle{
   display:inline-block;
   padding:10px 16px;
@@ -195,95 +142,69 @@ button:hover{ transform:translateY(-2px); }
   100%{ transform:rotate(-0.8deg) translateY(0); }
 }
 
+/* Image (small, no background, no dominance) */
 .giftImage{
-  width:min(560px,94%);
-  margin:14px auto 14px;
+  width:min(520px,94%);
+  margin:12px auto 14px;
   border-radius:22px;
   overflow:hidden;
-  background:rgba(255,255,255,.65);
-  box-shadow:0 18px 60px rgba(0,0,0,.10);
+  background:transparent;
+  box-shadow:none;
 }
 .giftImage img{
   width:100%;
   height:auto;
+  max-height:190px;      /* keeps it small */
   display:block;
-  object-fit:contain; /* ✅ full side */
-  background:rgba(255,255,255,.75);
+  object-fit:contain;
+  background:transparent;
 }
 
-.giftStack{
+/* phrase */
+.giftPill{
   width:min(650px,92%);
   margin:0 auto;
-  display:grid;
-  gap:14px;
-}
-
-.giftPill{
   padding:16px 18px;
   border-radius:999px;
   background:rgba(255,255,255,.88);
   box-shadow:0 16px 55px rgba(0,0,0,.10);
-  font-weight:700;
+  font-weight:750;
   opacity:.95;
 }
 
+/* footnote */
 .giftFootnote{
-  position:absolute;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  width:min(650px,92%);
+  margin-top:14px;
   font-size:14px;
-  font-weight:750;
-  color:#E35619; /* ✅ orange */
-  opacity:1;
-  z-index:10;
-  pointer-events:none;
+  font-weight:800;
+  color:#E35619;
 }
 .giftFootnote b{ font-weight:1000; }
 
-/* ✅ ONLY THIS ZONE can host emojis/options (the "orange zone") */
-.floatZone{
-  position:absolute;
-  left:50%;
-  bottom:70px; /* sits above footnote */
-  transform:translateX(-50%);
-  width:min(720px,92%);
-  height:120px;
-  border-radius:26px;
-  background:rgba(255,255,255,.68);
-  box-shadow:0 18px 60px rgba(0,0,0,.08);
-  pointer-events:auto;
-  z-index:6;
-  overflow:hidden;
-}
-
-/* floating items INSIDE floatZone */
+/* floating items: smaller + more transparent */
 .tag, .emojiFloat{
   position:absolute;
   transform:translate(-50%,-50%);
   pointer-events:none;
   opacity:0;
-  transition:opacity .55s ease, transform .55s ease;
+  transition:opacity .6s ease, transform .6s ease;
   will-change:transform,left,top;
 }
 
 .tag{
   padding:0;
-  border-radius:0;
   background:transparent;
-  box-shadow:none;
   font-weight:650;
-  font-size:12px;
+  font-size:11px;
   white-space:nowrap;
-  opacity:.92;
-  text-shadow:0 10px 22px rgba(0,0,0,.10);
+  opacity:.24;
+  text-shadow:0 10px 22px rgba(0,0,0,.08);
 }
 
 .emojiFloat{
-  font-size:22px;
-  filter:drop-shadow(0 10px 18px rgba(0,0,0,.12));
-  opacity:.95;
+  font-size:16px;
+  opacity:.22;
+  filter:drop-shadow(0 10px 16px rgba(0,0,0,.08));
 }
 
 .tag.show, .emojiFloat.show{
@@ -295,9 +216,9 @@ button:hover{ transform:translateY(-2px); }
   .card{ padding:22px; }
   h1{ font-size:28px; }
   .giftTitle{ font-size:26px; }
-  .giftHeader{ top:46%; }
-  .tag{ font-size:11px; }
-  .floatZone{ height:130px; bottom:76px; }
+  .giftImage img{ max-height:160px; }
+  .tag{ font-size:10px; }
+  .emojiFloat{ font-size:15px; }
 }
 </style>
 </head>
@@ -305,20 +226,8 @@ button:hover{ transform:translateY(-2px); }
 <body>
 
 <canvas id="confetti"></canvas>
-<audio id="audioBday" preload="auto"></audio>
 
 <div class="card" id="card">
-
-  <!-- REVEAL OVERLAY -->
-  <div class="revealOverlay" id="revealOverlay">
-    <div style="text-align:center;">
-      <div class="chest" aria-hidden="true">
-        <div class="lid"></div>
-        <div class="base"></div>
-      </div>
-      <div class="revealText">Ouverture du cadeau… 🎁✨</div>
-    </div>
-  </div>
 
   <!-- SLIDE 0 -->
   <div class="slide active">
@@ -354,35 +263,33 @@ button:hover{ transform:translateY(-2px); }
       <img id="imgOhlala" alt="">
     </div>
 
-    <button onclick="revealAndNext()">Découvre ton cadeau 🎁</button>
+    <button onclick="burstAndNext()">Débloque ton cadeau 🎁</button>
   </div>
 
-  <!-- SLIDE 3 -->
+  <!-- SLIDE 3 (GIFT) -->
   <div class="slide giftSlide" id="giftSlide">
 
-    <div class="giftHeader">
+    <!-- floating layer (background) -->
+    <div class="floatZone" id="floatZone"></div>
 
+    <!-- content layer -->
+    <div class="giftContent">
       <div class="giftTitle">
         💆‍♀️ <span class="wiggle">Une Séance de Head Spa</span> 🌟
       </div>
 
-      <!-- ✅ image directly under title -->
+      <!-- ✅ photo space on last page -->
       <div class="giftImage">
         <img id="imgToiBientot" alt="">
       </div>
 
-      <div class="giftStack">
-        <div class="giftPill">
-          Une séance complète incluant détente profonde et soin capillaire.
-        </div>
+      <div class="giftPill">
+        Une séance complète incluant détente profonde et soin capillaire.
       </div>
-    </div>
 
-    <!-- ✅ ONLY allowed zone for options/emojis -->
-    <div class="floatZone" id="floatZone"></div>
-
-    <div class="giftFootnote">
-      Merci de contacter <b>Mme Lucie Dubourdieu</b> pour récupérer votre lot 👮‍♂️
+      <div class="giftFootnote">
+        Merci de contacter <b>Mme Lucie Dubourdieu</b> pour récupérer votre lot 👮‍♂️
+      </div>
     </div>
 
   </div>
@@ -391,90 +298,76 @@ button:hover{ transform:translateY(-2px); }
 
 <script>
 /* =========================
-   MEDIA PATHS + FALLBACK
+   MEDIA FALLBACKS
+   - tries: root then /images/
+   - tries: .png, .jpg, .jpeg if you give base name
    ========================= */
 const MEDIA = {
   bases: ["", "images/"],
-  hero: "monanniversaire.png",
-  group: "lessurvivors.jpg",
-  ohlala: "ohlala.jpg",
-  toibientot: "toibientot.png",
-  bg: "bg.jpg",
-  audio: "intro.mp3" // mets ton mp3 à la racine (ou dans /images/ et change bases)
+  bg: "bg",
+  hero: "monanniversaire",
+  group: "lessurvivors",
+  ohlala: "ohlala",
+  toibientot: "toibientot"
 };
+const EXT = [".png",".jpg",".jpeg"];
 
-function setImgWithFallback(id, filename){
+function tryLoad(url){
+  return new Promise((resolve,reject)=>{
+    const img = new Image();
+    img.onload = ()=>resolve(url);
+    img.onerror = ()=>reject(url);
+    img.src = url;
+  });
+}
+
+async function setImgSmart(id, name){
   const el = document.getElementById(id);
   if(!el) return;
 
-  let i = 0;
-  const tryNext = () => {
-    if(i >= MEDIA.bases.length) return;
-    el.src = MEDIA.bases[i] + filename;
-    el.onerror = () => {
-      el.onerror = null;
-      i++;
-      tryNext();
-    };
-  };
-  tryNext();
+  const hasExt = /\.[a-zA-Z0-9]{3,4}$/.test(name);
+
+  for(const base of MEDIA.bases){
+    if(hasExt){
+      const url = base + name;
+      try{ await tryLoad(url); el.src = url; return; }catch(e){}
+    }else{
+      for(const ext of EXT){
+        const url = base + name + ext;
+        try{ await tryLoad(url); el.src = url; return; }catch(e){}
+      }
+    }
+  }
 }
 
-function setBgWithFallback(filename){
-  let i = 0;
-  const tryNext = () => {
-    if(i >= MEDIA.bases.length) return;
-    const url = MEDIA.bases[i] + filename;
+async function setBgSmart(name){
+  const hasExt = /\.[a-zA-Z0-9]{3,4}$/.test(name);
 
-    const img = new Image();
-    img.onload = () => {
-      document.documentElement.style.setProperty("--bgImg", `url("${url}")`);
-    };
-    img.onerror = () => { i++; tryNext(); };
-    img.src = url;
-  };
-  tryNext();
+  for(const base of MEDIA.bases){
+    if(hasExt){
+      const url = base + name;
+      try{ await tryLoad(url); document.documentElement.style.setProperty("--bgImg", `url("${url}")`); return; }catch(e){}
+    }else{
+      for(const ext of EXT){
+        const url = base + name + ext;
+        try{ await tryLoad(url); document.documentElement.style.setProperty("--bgImg", `url("${url}")`); return; }catch(e){}
+      }
+    }
+  }
 }
 
-function setAudioWithFallback(filename){
-  const a = document.getElementById("audioBday");
-  let i = 0;
-
-  const tryNext = () => {
-    if(i >= MEDIA.bases.length) return;
-    a.src = MEDIA.bases[i] + filename;
-    a.onerror = () => {
-      a.onerror = null;
-      i++;
-      tryNext();
-    };
-  };
-  tryNext();
-}
-
-/* autoplay best-effort (will really start on first click) */
-function tryPlayAudio(){
-  const a = document.getElementById("audioBday");
-  if(!a || !a.src) return;
-  a.volume = 0.65;
-  const p = a.play();
-  if(p && typeof p.catch === "function") p.catch(()=>{});
-}
-
-(function initMedia(){
-  setBgWithFallback(MEDIA.bg);
-  setImgWithFallback("imgHero", MEDIA.hero);
-  setImgWithFallback("imgGroup", MEDIA.group);
-  setImgWithFallback("imgOhlala", MEDIA.ohlala);
-  setImgWithFallback("imgToiBientot", MEDIA.toibientot);
-  setAudioWithFallback(MEDIA.audio);
+(async function initMedia(){
+  await setBgSmart(MEDIA.bg);
+  await setImgSmart("imgHero", MEDIA.hero);
+  await setImgSmart("imgGroup", MEDIA.group);
+  await setImgSmart("imgOhlala", MEDIA.ohlala);
+  await setImgSmart("imgToiBientot", MEDIA.toibientot);
 })();
 
 /* =========================
    CONFETTI ENGINE
-   - strong on slide 0
-   - soft on slide 1+
-   - burst on gift reveal
+   - continuous: strong slide 0, soft after
+   - burst: on gift button click (sparkles+confetti)
    ========================= */
 const Confetti = (function(){
   const c = document.getElementById("confetti");
@@ -495,7 +388,7 @@ const Confetti = (function(){
   const pieces = [];
   const MAX = 200;
 
-  // mode params
+  // continuous mode
   let activeCount = 180;
   let alpha = 0.95;
   let speedMult = 1.0;
@@ -503,52 +396,60 @@ const Confetti = (function(){
 
   function spawnTop(){
     return {
+      kind:"confetti",
       x: Math.random()*window.innerWidth,
       y: -20 - Math.random()*window.innerHeight*0.35,
       r: 3 + Math.random()*4,
       w: 6 + Math.random()*8,
       h: 8 + Math.random()*12,
-      vy: 1.5 + Math.random()*3.6,
+      vy: 1.4 + Math.random()*3.6,
       vx: -0.9 + Math.random()*1.8,
       rot: Math.random()*Math.PI*2,
       vr: (-0.10 + Math.random()*0.20),
       color: colors[(Math.random()*colors.length)|0],
-      shape: Math.random() < 0.55 ? "rect" : "circle"
+      shape: Math.random() < 0.55 ? "rect" : "circle",
+      life: Infinity
     };
   }
 
-  function spawnBurst(cx, cy){
-    const ang = Math.random()*Math.PI*2;
-    const sp = 2.4 + Math.random()*5.4;
-    return {
-      x: cx + (-18 + Math.random()*36),
-      y: cy + (-18 + Math.random()*36),
-      r: 3 + Math.random()*4,
-      w: 6 + Math.random()*8,
-      h: 8 + Math.random()*12,
-      vy: Math.sin(ang)*sp + (0.2 + Math.random()*1.2),
-      vx: Math.cos(ang)*sp,
-      rot: Math.random()*Math.PI*2,
-      vr: (-0.18 + Math.random()*0.36),
-      color: colors[(Math.random()*colors.length)|0],
-      shape: Math.random() < 0.55 ? "rect" : "circle",
-      ttl: 120 + (Math.random()*40|0)
-    };
+  // burst particles
+  const bursts = [];
+  function spawnBurst(x,y,type){
+    const n = type === "sparkle" ? 70 : 120;
+    for(let i=0;i<n;i++){
+      const ang = Math.random()*Math.PI*2;
+      const spd = (type === "sparkle" ? 2.2 : 2.8) + Math.random()*(type==="sparkle"?3.0:4.2);
+      bursts.push({
+        kind:type,
+        x, y,
+        vx: Math.cos(ang)*spd,
+        vy: Math.sin(ang)*spd - (type==="sparkle"?1.0:0.2),
+        rot: Math.random()*Math.PI*2,
+        vr: (-0.25 + Math.random()*0.5),
+        size: type==="sparkle" ? (1.5+Math.random()*2.5) : (3+Math.random()*5),
+        w: type==="sparkle" ? (2+Math.random()*3) : (5+Math.random()*7),
+        h: type==="sparkle" ? (2+Math.random()*3) : (7+Math.random()*10),
+        color: type==="sparkle" ? "rgba(255,255,255,.95)" : colors[(Math.random()*colors.length)|0],
+        shape: type==="sparkle" ? "star" : (Math.random()<0.55?"rect":"circle"),
+        life: type==="sparkle" ? (26+Math.random()*12) : (34+Math.random()*18)
+      });
+    }
+  }
+
+  function burstAtClientXY(clientX, clientY){
+    const x = clientX;
+    const y = clientY - 10;
+    spawnBurst(x,y,"sparkle");
+    spawnBurst(x,y,"confetti");
   }
 
   for(let i=0;i<MAX;i++) pieces.push(spawnTop());
 
   function setMode(mode){
     if(mode === 0){
-      activeCount = 180;
-      alpha = 0.95;
-      speedMult = 1.00;
-      windMult = 1.00;
+      activeCount = 180; alpha = 0.95; speedMult = 1.00; windMult = 1.00;
     }else{
-      activeCount = 70;
-      alpha = 0.28;
-      speedMult = 0.45;
-      windMult = 0.55;
+      activeCount = 70;  alpha = 0.28; speedMult = 0.45; windMult = 0.55;
     }
   }
 
@@ -557,27 +458,18 @@ const Confetti = (function(){
     setMode(mode);
     target = {activeCount, alpha, speedMult, windMult};
   }
-
   function lerp(a,b,t){ return a + (b-a)*t; }
-
-  // bursts separate list
-  const bursts = [];
-
-  function burst(){
-    const cx = window.innerWidth * 0.5;
-    const cy = window.innerHeight * 0.42;
-    for(let i=0;i<90;i++) bursts.push(spawnBurst(cx, cy));
-  }
 
   function step(){
     ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
 
+    // ease continuous
     activeCount = Math.round(lerp(activeCount, target.activeCount, 0.08));
     alpha      = lerp(alpha,      target.alpha,      0.08);
     speedMult  = lerp(speedMult,  target.speedMult,  0.08);
     windMult   = lerp(windMult,   target.windMult,   0.08);
 
-    // top confetti
+    // draw continuous
     for(let i=0;i<activeCount;i++){
       const p = pieces[i];
 
@@ -606,38 +498,59 @@ const Confetti = (function(){
       ctx.restore();
     }
 
-    // bursts
+    // draw bursts
     for(let i=bursts.length-1;i>=0;i--){
       const b = bursts[i];
+      b.life -= 1;
+
+      b.vx *= 0.985;
+      b.vy *= 0.985;
+      b.vy += (b.kind==="sparkle" ? 0.06 : 0.09);
+
       b.x += b.vx;
       b.y += b.vy;
-      b.vy += 0.08; // gravity
       b.rot += b.vr;
-      b.ttl--;
 
+      const fade = Math.max(0, Math.min(1, b.life / 30));
       ctx.save();
       ctx.translate(b.x, b.y);
       ctx.rotate(b.rot);
-      ctx.globalAlpha = Math.max(0, Math.min(1, b.ttl/120));
-      ctx.fillStyle = b.color;
+      ctx.globalAlpha = b.kind==="sparkle" ? (0.9*fade) : (0.95*fade);
 
-      if(b.shape === "rect"){
+      if(b.shape === "star"){
+        ctx.fillStyle = b.color;
+        ctx.beginPath();
+        ctx.moveTo(0, -b.size*2);
+        ctx.lineTo(b.size*0.7, -b.size*0.7);
+        ctx.lineTo(b.size*2, 0);
+        ctx.lineTo(b.size*0.7, b.size*0.7);
+        ctx.lineTo(0, b.size*2);
+        ctx.lineTo(-b.size*0.7, b.size*0.7);
+        ctx.lineTo(-b.size*2, 0);
+        ctx.lineTo(-b.size*0.7, -b.size*0.7);
+        ctx.closePath();
+        ctx.fill();
+      }else if(b.shape === "rect"){
+        ctx.fillStyle = b.color;
         ctx.fillRect(-b.w/2, -b.h/2, b.w, b.h);
       }else{
+        ctx.fillStyle = b.color;
         ctx.beginPath();
-        ctx.arc(0,0,b.r,0,Math.PI*2);
+        ctx.arc(0,0,b.size,0,Math.PI*2);
         ctx.fill();
       }
       ctx.restore();
 
-      if(b.ttl <= 0) bursts.splice(i,1);
+      if(b.life <= 0 || b.y > window.innerHeight + 60){
+        bursts.splice(i,1);
+      }
     }
 
     requestAnimationFrame(step);
   }
   step();
 
-  return { setModeSoft, burst };
+  return { setModeSoft, burstAtClientXY };
 })();
 
 /* =========================
@@ -648,34 +561,27 @@ const slides=document.querySelectorAll(".slide");
 Confetti.setModeSoft(0);
 
 function next(){
-  tryPlayAudio(); // ✅ starts on first user click if blocked
   slides[current].classList.remove("active");
   current++;
   slides[current].classList.add("active");
   Confetti.setModeSoft(current >= 1 ? 1 : 0);
-
-  if(slides[current].id==="giftSlide") startMagnetic();
+  if(slides[current].id==="giftSlide") startFloat();
 }
 
-/* reveal animation between slide 2 -> slide 3 */
-function revealAndNext(){
-  tryPlayAudio();
-
-  const overlay = document.getElementById("revealOverlay");
-  overlay.classList.add("show");
-
-  // small delay, then burst + move
-  setTimeout(()=>{ Confetti.burst(); }, 520);
-
-  setTimeout(()=>{
-    overlay.classList.remove("show");
-    next();
-  }, 980);
+/* burst confettis + paillettes, then go next */
+function burstAndNext(){
+  const btn = event?.currentTarget;
+  if(btn){
+    const r = btn.getBoundingClientRect();
+    Confetti.burstAtClientXY(r.left + r.width/2, r.top + r.height/2);
+  }else{
+    Confetti.burstAtClientXY(window.innerWidth/2, window.innerHeight/2);
+  }
+  setTimeout(()=>next(), 260);
 }
 
 /* =========================
-   FLOAT / MAGNETIC ENGINE
-   ✅ ONLY inside floatZone (bottom band)
+   FLOAT ENGINE (subtle, everywhere, but NEVER over reading zones)
    ========================= */
 const items=[
   "Bain des pieds prélassant aux herbes",
@@ -690,7 +596,6 @@ const items=[
   "Étirements serviette chaude"
 ];
 
-// 10 emojis total
 const baseEmojis=["🧖‍♀️","🍃","🧘‍♀️","☁️","🤍"];
 const emojis = baseEmojis.flatMap(e => [e,e]); // 10
 
@@ -700,7 +605,6 @@ const pointer={x:-9999,y:-9999,active:false};
 
 function rand(a,b){return Math.random()*(b-a)+a;}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
-
 function shuffle(arr){
   for(let i=arr.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
@@ -709,7 +613,7 @@ function shuffle(arr){
   return arr;
 }
 
-function startMagnetic(){
+function startFloat(){
   if(started) return;
   started=true;
 
@@ -723,16 +627,36 @@ function startMagnetic(){
   });
   zone.addEventListener("mouseleave",()=>pointer.active=false);
 
-  // ✅ only band (floatZone itself)
-  const BAND = { x1:6, x2:94, y1:18, y2:82 };
+  // Forbidden zones: title+image+pill area + footnote area
+  const FORBIDDEN = [
+    {x1:10, x2:90, y1:10, y2:64}, // title + image + main pill
+    {x1:10, x2:90, y1:82, y2:98}  // footnote
+  ];
 
-  function pickSpawn(){
-    return { x: rand(BAND.x1, BAND.x2), y: rand(BAND.y1, BAND.y2) };
+  function insideRect(x,y,r){
+    return x>=r.x1 && x<=r.x2 && y>=r.y1 && y<=r.y2;
+  }
+  function isForbidden(x,y){
+    return FORBIDDEN.some(r=>insideRect(x,y,r));
   }
 
-  const entries = [];
+  function pickSpawn(){
+    let x,y,tries=0;
+    do{
+      x = rand(4, 96);
+      y = rand(6, 94);
+      tries++;
+    }while(isForbidden(x,y) && tries<200);
+    return {x,y};
+  }
+
+  // entries (confetti-like, but subtle)
+  const entries=[];
   items.forEach(t => entries.push({type:"tag", text:t}));
   emojis.forEach(e => entries.push({type:"emojiFloat", text:e}));
+  items.slice(0,6).forEach(t => entries.push({type:"tag", text:t}));
+  baseEmojis.forEach(e => entries.push({type:"emojiFloat", text:e}));
+
   shuffle(entries);
 
   function create(entry,i){
@@ -748,11 +672,11 @@ function startMagnetic(){
       x:s.x, y:s.y,
       vx:0, vy:0,
       phase:rand(0,Math.PI*2),
-      drift:rand(0.10,0.22)
+      drift:rand(0.08,0.18)
     };
 
     blobs.push(obj);
-    setTimeout(()=>el.classList.add("show"), 140 + i*35);
+    setTimeout(()=>el.classList.add("show"), 140 + i*28);
   }
 
   entries.forEach((entry,i)=>create(entry,i));
@@ -763,39 +687,53 @@ function animate(){
   requestAnimationFrame(animate);
   const t = performance.now();
 
-  const BAND = { x1:6, x2:94, y1:18, y2:82 };
+  const FORBIDDEN = [
+    {x1:10, x2:90, y1:10, y2:64},
+    {x1:10, x2:90, y1:82, y2:98}
+  ];
+
+  function insideRect(x,y,r){
+    return x>=r.x1 && x<=r.x2 && y>=r.y1 && y<=r.y2;
+  }
+  function isForbidden(x,y){
+    return FORBIDDEN.some(r=>insideRect(x,y,r));
+  }
 
   blobs.forEach(b=>{
-    // levitation
-    const levX = Math.sin(t*0.001 + b.phase) * (0.55 * (b.drift*10));
-    const levY = Math.cos(t*0.0011 + b.phase) * (0.40 * (b.drift*10));
+    const levX = Math.sin(t*0.001 + b.phase) * (0.35 * (b.drift*10));
+    const levY = Math.cos(t*0.0011 + b.phase) * (0.26 * (b.drift*10));
 
     const targetX = b.baseX + levX;
     const targetY = b.baseY + levY;
 
-    b.vx += (targetX - b.x) * 0.02;
-    b.vy += (targetY - b.y) * 0.02;
+    b.vx += (targetX - b.x) * 0.018;
+    b.vy += (targetY - b.y) * 0.018;
 
-    // repel mouse (inside band only)
     if(pointer.active){
       const dx=b.x-pointer.x;
       const dy=b.y-pointer.y;
       const dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist < 26){
-        const safeDist = Math.max(dist, 0.001);
-        b.vx += (dx/safeDist) * 0.62;
-        b.vy += (dy/safeDist) * 0.62;
+      if(dist < 18){
+        const safe = Math.max(dist, 0.001);
+        b.vx += (dx/safe) * 0.30;
+        b.vy += (dy/safe) * 0.30;
       }
     }
 
-    b.vx *= 0.90;
-    b.vy *= 0.90;
+    b.vx *= 0.92;
+    b.vy *= 0.92;
     b.x += b.vx;
     b.y += b.vy;
 
-    // keep them inside the band
-    b.x = clamp(b.x, BAND.x1, BAND.x2);
-    b.y = clamp(b.y, BAND.y1, BAND.y2);
+    b.x = clamp(b.x, 4, 96);
+    b.y = clamp(b.y, 6, 94);
+
+    if(isForbidden(b.x,b.y)){
+      b.x = rand(4,96);
+      b.y = rand(6,94);
+      b.baseX = b.x;
+      b.baseY = b.y;
+    }
 
     b.el.style.left = b.x + "%";
     b.el.style.top  = b.y + "%";
