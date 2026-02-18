@@ -43,7 +43,7 @@ body{
   text-align:center;
   position:relative;
   overflow:auto;
-  max-height:92vh;                 /* ✅ phone safe */
+  max-height:92vh;
   -webkit-overflow-scrolling:touch;
 }
 
@@ -102,7 +102,7 @@ button:hover{ transform:translateY(-2px); }
 }
 
 /* =========================
-   SLIDE "OHLALA" (big bold intro)
+   SLIDE "OHLALA"
    ========================= */
 .bigBold{
   font-size:30px;
@@ -118,6 +118,44 @@ button:hover{ transform:translateY(-2px); }
 }
 
 /* =========================
+   COUNTDOWN OVERLAY
+   ========================= */
+#countdownOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:10000;
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(6px);
+}
+#countdownOverlay.show{ display:flex; }
+
+.countPill{
+  background:#fff;
+  border-radius:26px;
+  padding:22px 28px;
+  box-shadow:0 30px 90px rgba(0,0,0,.25);
+  min-width:min(320px,86vw);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:center;
+  justify-content:center;
+}
+.countNum{
+  font-weight:1000;
+  font-size:72px;
+  line-height:1;
+  letter-spacing:-2px;
+}
+.countHint{
+  font-weight:850;
+  opacity:.9;
+}
+
+/* =========================
    GIFT SLIDE
    ========================= */
 .giftSlide{
@@ -129,7 +167,7 @@ button:hover{ transform:translateY(-2px); }
 .floatZone{
   position:absolute;
   inset:-22px;
-  pointer-events:auto;   /* hover */
+  pointer-events:auto; /* hover */
   z-index:2;
 }
 
@@ -173,7 +211,7 @@ button:hover{ transform:translateY(-2px); }
   max-height:clamp(240px, 42vh, 460px);
   display:block;
   object-fit:contain;
-  background:transparent; /* PNG */
+  background:transparent;
 }
 
 /* ✅ pill NON transparent */
@@ -182,10 +220,10 @@ button:hover{ transform:translateY(-2px); }
   margin:0 auto;
   padding:16px 18px;
   border-radius:999px;
-  background:#fff;                 /* ✅ opaque */
+  background:#fff;
   box-shadow:0 16px 55px rgba(0,0,0,.12);
   font-weight:800;
-  opacity:1;                       /* ✅ */
+  opacity:1;
 }
 
 .giftFootnote{
@@ -197,10 +235,7 @@ button:hover{ transform:translateY(-2px); }
 .giftFootnote b{ font-weight:1000; }
 
 /* =========================
-   FLOATING OPTIONS (harmonieux)
-   - fond blanc
-   - hover doux
-   - pas aimant
+   FLOATING OPTIONS
    ========================= */
 .tag, .emojiFloat{
   position:absolute;
@@ -253,6 +288,7 @@ button:hover{ transform:translateY(-2px); }
   .giftPill{ border-radius:22px; padding:14px 14px; font-size:15px; }
   .tag{ font-size:11px; max-width:82vw; }
   .emojiFloat{ font-size:15px; }
+  .countNum{ font-size:64px; }
 }
 </style>
 </head>
@@ -260,6 +296,14 @@ button:hover{ transform:translateY(-2px); }
 <body>
 
 <canvas id="confetti"></canvas>
+
+<!-- COUNTDOWN OVERLAY -->
+<div id="countdownOverlay" aria-hidden="true">
+  <div class="countPill">
+    <div class="countNum" id="countNum">5</div>
+    <div class="countHint" id="countHint">Prépare-toi… 🎁</div>
+  </div>
+</div>
 
 <div class="card" id="card">
 
@@ -270,10 +314,10 @@ button:hover{ transform:translateY(-2px); }
     </div>
     <h1>Happy Birthday ma chérie 🎉</h1>
     <p>Prête pour la suite ? 👀</p>
-    <button onclick="next()">Débloque la suite 🔓</button>
+    <button onclick="burstAndNextGeneric(event)">Débloque la suite 🔓</button>
   </div>
 
-  <!-- ✅ SLIDE 1 (OHLALA) : AVANT "DE LA PART DE" -->
+  <!-- SLIDE 1 (OHLALA) : bouton = Débloque la suite -->
   <div class="slide">
     <div class="bigBold">On pense à toi, et on veut que tu te détendes…</div>
     <div class="subText">
@@ -281,25 +325,24 @@ button:hover{ transform:translateY(-2px); }
       <b>un crâne bien détendu.</b> (pas toi après le soin ➡️ 💀)
     </div>
 
-    <!-- ✅ ohlala sans fond -->
     <div class="photoBox noBg" style="margin-top:16px;">
       <img id="imgOhlala" alt="">
     </div>
 
-    <button onclick="burstAndNext(event)">Débloque ton cadeau 🎁</button>
+    <button onclick="burstAndNextGeneric(event)">Débloque la suite 🔓</button>
   </div>
 
-  <!-- ✅ SLIDE 2 (DE LA PART DE) : APRES OHLALA -->
+  <!-- SLIDE 2 (DE LA PART DE) : bouton = Débloque ton cadeau -->
   <div class="slide">
     <h1 style="font-size:22px; font-weight:950; margin-bottom:8px;">
-      Même si tu es loin, on voulait célébrer ce moment avec toi!
+      💞 Même si tu es loin, on voulait célébrer ce moment avec toi!
     </h1>
 
     <div class="photoBox square">
       <img id="imgGroup" alt="">
     </div>
 
-    <button onclick="next()">Débloque la suite 🔓</button>
+    <button onclick="countdownToGift(event)">Débloque ton cadeau 🎁</button>
   </div>
 
   <!-- SLIDE 3 (GIFT) -->
@@ -461,9 +504,16 @@ const Confetti = (function(){
     }
   }
 
-  function burstAtClientXY(clientX, clientY){
+  function burstAtClientXY(clientX, clientY, big=false){
+    // un petit burst + (si big) un deuxième gros
     spawnBurst(clientX, clientY-10, "sparkle");
     spawnBurst(clientX, clientY-10, "confetti");
+    if(big){
+      setTimeout(()=>{
+        spawnBurst(clientX, clientY-10, "sparkle");
+        spawnBurst(clientX, clientY-10, "confetti");
+      }, 140);
+    }
   }
 
   for(let i=0;i<MAX;i++) pieces.push(spawnTop());
@@ -580,7 +630,8 @@ function next(){
   if(slides[current].id==="giftSlide") startFloat();
 }
 
-function burstAndNext(e){
+/* ✅ confetti sur TOUS les boutons "suivant" */
+function burstAndNextGeneric(e){
   const btn = e?.currentTarget;
   if(btn){
     const r = btn.getBoundingClientRect();
@@ -588,7 +639,61 @@ function burstAndNext(e){
   }else{
     Confetti.burstAtClientXY(window.innerWidth/2, window.innerHeight/2);
   }
-  setTimeout(()=>next(), 260);
+  setTimeout(()=>next(), 220);
+}
+
+/* ✅ COUNTDOWN 5..1 + explosion finale + reveal cadeau */
+function countdownToGift(e){
+  // petit burst sur le bouton aussi
+  const btn = e?.currentTarget;
+  if(btn){
+    const r = btn.getBoundingClientRect();
+    Confetti.burstAtClientXY(r.left + r.width/2, r.top + r.height/2);
+  }
+
+  const overlay = document.getElementById("countdownOverlay");
+  const numEl = document.getElementById("countNum");
+  const hintEl = document.getElementById("countHint");
+
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+
+  // éviter double click
+  document.querySelectorAll("button").forEach(b=>b.disabled=true);
+
+  const centerX = window.innerWidth/2;
+  const centerY = window.innerHeight/2;
+
+  let n = 5;
+  numEl.textContent = n;
+  hintEl.textContent = "Prépare-toi… 🎁";
+
+  // burst sur chaque chiffre
+  Confetti.burstAtClientXY(centerX, centerY, false);
+
+  const tick = () => {
+    n--;
+    if(n >= 1){
+      numEl.textContent = n;
+      Confetti.burstAtClientXY(centerX, centerY, false);
+      setTimeout(tick, 520);
+    }else{
+      numEl.textContent = "1";
+      Confetti.burstAtClientXY(centerX, centerY, true);
+
+      setTimeout(()=>{
+        overlay.classList.remove("show");
+        overlay.setAttribute("aria-hidden","true");
+        document.querySelectorAll("button").forEach(b=>b.disabled=false);
+
+        // grosse explosion juste avant apparition cadeau
+        Confetti.burstAtClientXY(centerX, centerY, true);
+        setTimeout(()=>next(), 180);
+      }, 620);
+    }
+  };
+
+  setTimeout(tick, 520);
 }
 
 /* =========================
@@ -629,7 +734,6 @@ function startFloat(){
   const zone=document.getElementById("floatZone");
   const isMobile = window.matchMedia("(max-width:520px)").matches;
 
-  // Forbidden zones: title+image+pill area + footnote area
   const FORBIDDEN = isMobile ? [
     {x1:8,  x2:92, y1:6,  y2:74},
     {x1:10, x2:90, y1:84, y2:99}
@@ -647,7 +751,6 @@ function startFloat(){
   ];
   shuffle(entries);
 
-  // spacing (in percent)
   const MIN_DIST = isMobile ? 14 : 12;
 
   function farEnough(x,y){
