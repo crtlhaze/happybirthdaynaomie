@@ -167,7 +167,7 @@ button:hover{ transform:translateY(-2px); }
 .floatZone{
   position:absolute;
   inset:-22px;
-  pointer-events:auto; /* hover */
+  pointer-events:none; /* ✅ emojis only */
   z-index:2;
 }
 
@@ -177,17 +177,17 @@ button:hover{ transform:translateY(-2px); }
   width:100%;
 }
 
-/* Title */
+/* Title (smaller + phone friendly) */
 .giftTitle{
-  font-size:34px;
+  font-size:28px;
   font-weight:1000;
-  margin:0 0 12px;
+  margin:0 0 10px;
   letter-spacing:-.4px;
   line-height:1.08;
 }
 .giftTitle .wiggle{
   display:inline-block;
-  padding:10px 16px;
+  padding:9px 14px;
   border-radius:999px;
   background:rgba(255,255,255,.92);
   box-shadow:0 18px 55px rgba(0,0,0,.12);
@@ -199,10 +199,10 @@ button:hover{ transform:translateY(-2px); }
   100%{ transform:rotate(-0.8deg) translateY(0); }
 }
 
-/* ✅ espace image sans fond + plus grande */
+/* ✅ espace image (PNG sans fond) */
 .giftImage{
   width:min(700px,96%);
-  margin:12px auto 16px;
+  margin:10px auto 14px;
   background:transparent;
 }
 .giftImage img{
@@ -214,18 +214,57 @@ button:hover{ transform:translateY(-2px); }
   background:transparent;
 }
 
-/* ✅ pill NON transparent */
+/* ✅ pill NON transparent + phrase modifiée */
 .giftPill{
-  width:min(680px,94%);
+  width:min(720px,94%);
   margin:0 auto;
   padding:16px 18px;
   border-radius:999px;
   background:#fff;
   box-shadow:0 16px 55px rgba(0,0,0,.12);
-  font-weight:800;
+  font-weight:900;
   opacity:1;
 }
 
+/* ✅ ONE SPOT, ONE LINE, LOOPING */
+.loopArea{
+  width:min(720px,94%);
+  margin:12px auto 0;
+  display:flex;
+  justify-content:center;
+}
+.loopPill{
+  width:100%;
+  background:#fff;
+  border-radius:999px;
+  padding:12px 16px;
+  box-shadow:0 14px 35px rgba(0,0,0,.10);
+  font-weight:900;
+  font-size:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  position:relative;
+  overflow:hidden;
+}
+.loopText{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 18px;
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity .35s ease, transform .35s ease;
+}
+.loopText.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* footnote */
 .giftFootnote{
   margin-top:12px;
   font-size:14px;
@@ -234,48 +273,18 @@ button:hover{ transform:translateY(-2px); }
 }
 .giftFootnote b{ font-weight:1000; }
 
-/* =========================
-   FLOATING OPTIONS
-   ========================= */
-.tag, .emojiFloat{
+/* ✅ floating emojis only */
+.emojiFloat{
   position:absolute;
   transform:translate(-50%,-50%);
-  pointer-events:auto;
-  opacity:0;
-  transition:opacity .6s ease, transform .25s ease, box-shadow .25s ease;
+  pointer-events:none;
+  opacity:.25;
+  filter:drop-shadow(0 10px 16px rgba(0,0,0,.10));
   will-change:transform,left,top;
-  background:rgba(255,255,255,.96);
-  padding:7px 12px;
-  border-radius:999px;
-  box-shadow:0 12px 28px rgba(0,0,0,.10);
-  backdrop-filter:blur(6px);
-  cursor:pointer;
+  transition:opacity .5s ease;
 }
+.emojiFloat.show{ opacity:.30; }
 
-.tag{
-  font-weight:750;
-  font-size:12px;
-  white-space:nowrap;
-  max-width:min(78vw, 360px);
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.emojiFloat{
-  font-size:16px;
-  padding:7px 10px;
-}
-
-.tag.show, .emojiFloat.show{ opacity:1; }
-
-.tag:hover, .emojiFloat:hover{
-  transform:translate(-50%,-50%) scale(1.10);
-  box-shadow:0 18px 45px rgba(0,0,0,.18);
-}
-
-/* =========================
-   PHONE TUNING
-   ========================= */
 @media (max-width:520px){
   .card{ padding:18px; width:min(920px,94vw); border-radius:24px; }
   h1{ font-size:26px; }
@@ -283,11 +292,10 @@ button:hover{ transform:translateY(-2px); }
   button{ width:100%; }
   .bigBold{ font-size:26px; }
   .subText{ font-size:15px; }
-  .giftTitle{ font-size:24px; }
+  .giftTitle{ font-size:22px; }
   .giftImage img{ max-height:clamp(220px, 40vh, 380px); }
   .giftPill{ border-radius:22px; padding:14px 14px; font-size:15px; }
-  .tag{ font-size:11px; max-width:82vw; }
-  .emojiFloat{ font-size:15px; }
+  .loopPill{ border-radius:18px; font-size:14px; }
   .countNum{ font-size:64px; }
 }
 </style>
@@ -317,7 +325,7 @@ button:hover{ transform:translateY(-2px); }
     <button onclick="burstAndNextGeneric(event)">Débloque la suite 🔓</button>
   </div>
 
-  <!-- SLIDE 1 (OHLALA) : bouton = Débloque la suite -->
+  <!-- SLIDE 1 (OHLALA) -->
   <div class="slide">
     <div class="bigBold">On pense à toi, et on veut que tu te détendes…</div>
     <div class="subText">
@@ -332,7 +340,7 @@ button:hover{ transform:translateY(-2px); }
     <button onclick="burstAndNextGeneric(event)">Débloque la suite 🔓</button>
   </div>
 
-  <!-- SLIDE 2 (DE LA PART DE) : bouton = Débloque ton cadeau -->
+  <!-- SLIDE 2 (DE LA PART DE) -->
   <div class="slide">
     <h1 style="font-size:22px; font-weight:950; margin-bottom:8px;">
       💞 Même si tu es loin, on voulait célébrer ce moment avec toi!
@@ -347,28 +355,31 @@ button:hover{ transform:translateY(-2px); }
 
   <!-- SLIDE 3 (GIFT) -->
   <div class="slide giftSlide" id="giftSlide">
-
     <div class="floatZone" id="floatZone" aria-hidden="true"></div>
 
     <div class="giftContent">
       <div class="giftTitle">
-        💆‍♀️ <span class="wiggle">Une Séance de Head Spa</span> 🌟
+        💆‍♀️ <span class="wiggle">Une Séance de Head Spa</span>
       </div>
 
-      <!-- ✅ espace image (PNG sans fond) -->
       <div class="giftImage">
         <img id="imgToiBientot" alt="">
       </div>
 
       <div class="giftPill">
-        Une séance complète incluant détente profonde et soin capillaire.
+        Une séance complète incluant détente profonde et soin capillaire pour ton petit crâne délicat.
+      </div>
+
+      <div class="loopArea">
+        <div class="loopPill" aria-live="polite" aria-atomic="true">
+          <div class="loopText show" id="loopText"></div>
+        </div>
       </div>
 
       <div class="giftFootnote">
         Merci de contacter <b>Mme Lucie Dubourdieu</b> pour récupérer votre lot 👮‍♂️
       </div>
     </div>
-
   </div>
 
 </div>
@@ -505,7 +516,6 @@ const Confetti = (function(){
   }
 
   function burstAtClientXY(clientX, clientY, big=false){
-    // un petit burst + (si big) un deuxième gros
     spawnBurst(clientX, clientY-10, "sparkle");
     spawnBurst(clientX, clientY-10, "confetti");
     if(big){
@@ -627,10 +637,13 @@ function next(){
   current++;
   slides[current].classList.add("active");
   Confetti.setModeSoft(current >= 1 ? 1 : 0);
-  if(slides[current].id==="giftSlide") startFloat();
+
+  if(slides[current].id === "giftSlide"){
+    startEmojiFloat();
+    startLoop();
+  }
 }
 
-/* ✅ confetti sur TOUS les boutons "suivant" */
 function burstAndNextGeneric(e){
   const btn = e?.currentTarget;
   if(btn){
@@ -642,9 +655,7 @@ function burstAndNextGeneric(e){
   setTimeout(()=>next(), 220);
 }
 
-/* ✅ COUNTDOWN 5..1 + explosion finale + reveal cadeau */
 function countdownToGift(e){
-  // petit burst sur le bouton aussi
   const btn = e?.currentTarget;
   if(btn){
     const r = btn.getBoundingClientRect();
@@ -657,37 +668,32 @@ function countdownToGift(e){
 
   overlay.classList.add("show");
   overlay.setAttribute("aria-hidden","false");
-
-  // éviter double click
   document.querySelectorAll("button").forEach(b=>b.disabled=true);
 
-  const centerX = window.innerWidth/2;
-  const centerY = window.innerHeight/2;
+  const cx = window.innerWidth/2;
+  const cy = window.innerHeight/2;
 
   let n = 5;
   numEl.textContent = n;
   hintEl.textContent = "Prépare-toi… 🎁";
-
-  // burst sur chaque chiffre
-  Confetti.burstAtClientXY(centerX, centerY, false);
+  Confetti.burstAtClientXY(cx, cy, false);
 
   const tick = () => {
     n--;
     if(n >= 1){
       numEl.textContent = n;
-      Confetti.burstAtClientXY(centerX, centerY, false);
+      Confetti.burstAtClientXY(cx, cy, false);
       setTimeout(tick, 520);
     }else{
       numEl.textContent = "1";
-      Confetti.burstAtClientXY(centerX, centerY, true);
+      Confetti.burstAtClientXY(cx, cy, true);
 
       setTimeout(()=>{
         overlay.classList.remove("show");
         overlay.setAttribute("aria-hidden","true");
         document.querySelectorAll("button").forEach(b=>b.disabled=false);
 
-        // grosse explosion juste avant apparition cadeau
-        Confetti.burstAtClientXY(centerX, centerY, true);
+        Confetti.burstAtClientXY(cx, cy, true);
         setTimeout(()=>next(), 180);
       }, 620);
     }
@@ -697,150 +703,117 @@ function countdownToGift(e){
 }
 
 /* =========================
-   FLOAT ENGINE (harmonieux)
-   - pas d'aimant
-   - spacing / anti-overlap
+   GIFT PAGE - EMOJI FLOAT ONLY
    ========================= */
-const items=[
-  "Bain des pieds prélassant aux herbes",
-  "Massage relaxant Guasha",
-  "Stimulation avec accessoires 😉",
-  "Nettoyage / Exfoliation",
-  "Serviette crépitante & Shiatsu Bambou",
-  "Masque hydratant sous vapeur",
-  "Modelage bras Hot Stone",
-  "Gelée capillaire Aloe",
-  "Étirements serviette chaude"
-];
-const emojis=["🧖‍♀️","🍃","🧘‍♀️","☁️","🤍"];
+let emojiStarted=false;
+const emojiBlobs=[];
 
-let started=false;
-const blobs=[];
+function rand(a,b){ return Math.random()*(b-a)+a; }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
-function rand(a,b){return Math.random()*(b-a)+a;}
-function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
-function shuffle(arr){
-  for(let i=arr.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]]=[arr[j],arr[i]];
-  }
-  return arr;
-}
+function startEmojiFloat(){
+  if(emojiStarted) return;
+  emojiStarted=true;
 
-function startFloat(){
-  if(started) return;
-  started=true;
-
-  const zone=document.getElementById("floatZone");
+  const zone = document.getElementById("floatZone");
+  const emojis = ["🧖‍♀️","🍃","🧘‍♀️","☁️","🌿","🤍"];
   const isMobile = window.matchMedia("(max-width:520px)").matches;
 
-  const FORBIDDEN = isMobile ? [
-    {x1:8,  x2:92, y1:6,  y2:74},
-    {x1:10, x2:90, y1:84, y2:99}
-  ] : [
-    {x1:10, x2:90, y1:8,  y2:68},
-    {x1:10, x2:90, y1:82, y2:98}
-  ];
-
-  function insideRect(x,y,r){ return x>=r.x1 && x<=r.x2 && y>=r.y1 && y<=r.y2; }
-  function isForbidden(x,y){ return FORBIDDEN.some(r=>insideRect(x,y,r)); }
-
-  const entries=[
-    ...items.map(t=>({type:"tag",text:t})),
-    ...emojis.map(e=>({type:"emojiFloat",text:e}))
-  ];
-  shuffle(entries);
-
-  const MIN_DIST = isMobile ? 14 : 12;
-
-  function farEnough(x,y){
-    for(const b of blobs){
-      const dx = x - b.baseX;
-      const dy = y - b.baseY;
-      if(Math.sqrt(dx*dx + dy*dy) < MIN_DIST) return false;
-    }
-    return true;
-  }
-
-  function pickSpawn(){
-    let x,y,tries=0;
-    do{
-      x = rand(6, 94);
-      y = rand(8, 92);
-      tries++;
-    }while((isForbidden(x,y) || !farEnough(x,y)) && tries < 400);
-    return {x,y};
-  }
-
-  function create(entry,i){
-    const el=document.createElement("div");
-    el.className=entry.type;
-    el.textContent=entry.text;
+  emojis.forEach((emo,i)=>{
+    const el = document.createElement("div");
+    el.className = "emojiFloat";
+    el.textContent = emo;
     zone.appendChild(el);
 
-    const s = pickSpawn();
+    const side = Math.floor(Math.random()*4);
+    let x,y;
+    if(side===0){ x=rand(5,95); y=rand(4,10); }
+    if(side===1){ x=rand(5,95); y=rand(90,96); }
+    if(side===2){ x=rand(4,10); y=rand(10,90); }
+    if(side===3){ x=rand(90,96); y=rand(10,90); }
 
-    const obj={
+    const blob = {
       el,
-      baseX:s.x, baseY:s.y,
-      x:s.x, y:s.y,
+      baseX:x, baseY:y,
+      x, y,
       vx:0, vy:0,
       phase:rand(0,Math.PI*2),
-      drift:rand(0.08,0.16)
+      size: rand(isMobile?16:18, isMobile?22:26)
     };
 
-    blobs.push(obj);
-    setTimeout(()=>el.classList.add("show"), 140 + i*30);
-  }
+    el.style.fontSize = blob.size + "px";
+    emojiBlobs.push(blob);
+    setTimeout(()=>el.classList.add("show"), 160 + i*70);
+  });
 
-  entries.forEach((entry,i)=>create(entry,i));
-  animate();
+  (function animate(){
+    requestAnimationFrame(animate);
+    const t = performance.now();
+    const isMobileNow = window.matchMedia("(max-width:520px)").matches;
+    const amp = isMobileNow ? 1.0 : 1.4;
+
+    emojiBlobs.forEach(b=>{
+      const levX = Math.sin(t*0.001 + b.phase) * (amp * 1.1);
+      const levY = Math.cos(t*0.0011 + b.phase) * (amp * 0.9);
+
+      const targetX = b.baseX + levX;
+      const targetY = b.baseY + levY;
+
+      b.vx += (targetX - b.x) * 0.02;
+      b.vy += (targetY - b.y) * 0.02;
+
+      b.vx *= 0.90; b.vy *= 0.90;
+      b.x += b.vx;  b.y += b.vy;
+
+      b.x = clamp(b.x, 3, 97);
+      b.y = clamp(b.y, 3, 97);
+
+      b.el.style.left = b.x + "%";
+      b.el.style.top  = b.y + "%";
+    });
+  })();
 }
 
-function animate(){
-  requestAnimationFrame(animate);
-  const t = performance.now();
-  const isMobile = window.matchMedia("(max-width:520px)").matches;
+/* =========================
+   GIFT PAGE - ONE LINE LOOP (SLOWER ✅)
+   ========================= */
+let loopStarted=false;
+function startLoop(){
+  if(loopStarted) return;
+  loopStarted=true;
 
-  const FORBIDDEN = isMobile ? [
-    {x1:8,  x2:92, y1:6,  y2:74},
-    {x1:10, x2:90, y1:84, y2:99}
-  ] : [
-    {x1:10, x2:90, y1:8,  y2:68},
-    {x1:10, x2:90, y1:82, y2:98}
+  const options = [
+    "Nettoyage / Exfoliation",
+    "Masque hydratant sous vapeur",
+    "Massage relaxant Guasha",
+    "Serviette crépitante & Shiatsu Bambou",
+    "Gelée capillaire Aloe",
+    "Étirements serviette chaude",
+    "Stimulation avec accessoires 😉",
+    "Modelage bras Hot Stone",
+    "Bain des pieds prélassant aux herbes"
   ];
 
-  function insideRect(x,y,r){ return x>=r.x1 && x<=r.x2 && y>=r.y1 && y<=r.y2; }
-  function isForbidden(x,y){ return FORBIDDEN.some(r=>insideRect(x,y,r)); }
+  const el = document.getElementById("loopText");
+  if(!el) return;
 
-  blobs.forEach(b=>{
-    const ampX = isMobile ? 0.8 : 1.1;
-    const ampY = isMobile ? 0.7 : 1.0;
+  let i = 0;
 
-    const levX = Math.sin(t*0.001 + b.phase) * ampX;
-    const levY = Math.cos(t*0.0011 + b.phase) * ampY;
+  const showOne = () => {
+    el.classList.remove("show");
+    setTimeout(()=>{
+      el.textContent = options[i];
+      el.classList.add("show");
+      i = (i + 1) % options.length;
+    }, 260);
+  };
 
-    const targetX = b.baseX + levX;
-    const targetY = b.baseY + levY;
+  el.textContent = options[0];
+  el.classList.add("show");
+  i = 1;
 
-    b.vx += (targetX - b.x) * 0.018;
-    b.vy += (targetY - b.y) * 0.018;
-
-    b.vx *= 0.92; b.vy *= 0.92;
-    b.x += b.vx;  b.y += b.vy;
-
-    b.x = clamp(b.x, 5, 95);
-    b.y = clamp(b.y, 7, 93);
-
-    if(isForbidden(b.x,b.y)){
-      b.x = rand(6,94);
-      b.y = rand(8,92);
-      b.baseX = b.x; b.baseY = b.y;
-    }
-
-    b.el.style.left = b.x + "%";
-    b.el.style.top  = b.y + "%";
-  });
+  // ✅ slower: was 1400ms -> now 2600ms
+  setInterval(showOne, 2600);
 }
 </script>
 
