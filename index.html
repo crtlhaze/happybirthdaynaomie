@@ -25,7 +25,7 @@ body{
   background-position:center;
 }
 
-/* CONFETTI CANVAS */
+/* CONFETTI */
 #confetti{
   position:fixed;
   inset:0;
@@ -45,251 +45,123 @@ body{
   overflow:hidden;
 }
 
-h1{ font-size:34px; margin:0 0 10px; }
-p{ margin:0; opacity:.92; line-height:1.55; }
-
-button{
-  margin-top:20px;
-  padding:12px 20px;
-  border-radius:14px;
-  border:none;
-  cursor:pointer;
-  font-weight:900;
-  background:linear-gradient(135deg,#E35619,#FFBDF8);
-  color:#fff;
-  box-shadow:0 14px 40px rgba(0,0,0,.12);
-  transition:.2s;
-}
-button:hover{ transform:translateY(-2px); }
-
 .slide{ display:none; }
 .slide.active{ display:block; }
 
-.heroImage{
-  width:min(520px,92%);
-  margin:0 auto 20px;
-}
-.heroImage img{ width:100%; height:auto; display:block; object-fit:contain; }
-
-/* ===== PHOTO BOX (DEFAULT) ===== */
-.photoBox{
-  width:min(640px,96%);
-  margin:20px auto 0;
-  border-radius:22px;
-  overflow:hidden;
-  aspect-ratio:16/9;
-  box-shadow:0 18px 60px rgba(0,0,0,.10);
-  background:rgba(255,255,255,.65);
-}
-.photoBox img{
-  width:100%;
-  height:100%;
-  object-fit:contain; /* no crop */
-  display:block;
-  background:rgba(255,255,255,.75);
-}
-
-/* square for group */
-.photoBox.square{
-  aspect-ratio:1/1;
-  width:min(520px,92%);
-}
-
 /* =========================
-   GIFT SLIDE (clean hierarchy)
+   GIFT SLIDE
    ========================= */
+
 .giftSlide{
   position:relative;
-  min-height:610px;
-  padding:18px 10px 14px;
+  min-height:650px;
+  padding:20px 10px;
 }
 
-/* background zone for floating stuff (full slide) */
 .floatZone{
   position:absolute;
-  inset:-22px;
-  pointer-events:auto;
-  z-index:2;            /* behind text */
+  inset:-20px;
+  z-index:2;
 }
 
 .giftContent{
   position:relative;
-  z-index:10;           /* above float */
-  width:100%;
+  z-index:10;
 }
 
-/* Title */
 .giftTitle{
   font-size:36px;
-  font-weight:1000;
-  margin:0 0 12px;
-  letter-spacing:-.4px;
-  line-height:1.05;
+  font-weight:900;
+  margin-bottom:20px;
 }
 
-/* highlighted + fretille just on the core phrase */
-.giftTitle .wiggle{
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:999px;
-  background:rgba(255,255,255,.82);
-  box-shadow:0 18px 55px rgba(0,0,0,.12);
-  animation:wiggle 1.6s ease-in-out infinite;
-}
-@keyframes wiggle{
-  0%{ transform:rotate(-0.8deg) translateY(0); }
-  50%{ transform:rotate(0.8deg) translateY(-1px); }
-  100%{ transform:rotate(-0.8deg) translateY(0); }
-}
-
-/* Image (small, no background, no dominance) */
+/* --- IMAGE SANS FOND PREVUE --- */
 .giftImage{
-  width:min(520px,94%);
-  margin:12px auto 14px;
-  border-radius:22px;
-  overflow:hidden;
-  background:transparent;
-  box-shadow:none;
+  width:min(700px,96%);
+  margin:0 auto 25px;
 }
+
 .giftImage img{
   width:100%;
   height:auto;
-  max-height:190px;      /* keeps it small */
-  display:block;
+  max-height:clamp(260px, 45vh, 460px);
   object-fit:contain;
-  background:transparent;
+  background:transparent; /* important pour PNG */
+  display:block;
 }
 
-/* phrase */
+/* --- PILL --- */
 .giftPill{
   width:min(650px,92%);
-  margin:0 auto;
-  padding:16px 18px;
+  margin:0 auto 18px;
+  padding:16px 20px;
   border-radius:999px;
-  background:rgba(255,255,255,.88);
-  box-shadow:0 16px 55px rgba(0,0,0,.10);
-  font-weight:750;
-  opacity:.95;
+  background:rgba(255,255,255,.9);
+  box-shadow:0 18px 55px rgba(0,0,0,.10);
+  font-weight:700;
 }
 
-/* footnote */
-.giftFootnote{
-  margin-top:14px;
-  font-size:14px;
-  font-weight:800;
-  color:#E35619;
-}
-.giftFootnote b{ font-weight:1000; }
+/* --- FLOATING OPTIONS STYLE --- */
 
-/* floating items: smaller + more transparent */
 .tag, .emojiFloat{
   position:absolute;
   transform:translate(-50%,-50%);
-  pointer-events:none;
+  background:rgba(255,255,255,.92);
+  padding:6px 12px;
+  border-radius:999px;
+  box-shadow:0 12px 30px rgba(0,0,0,.08);
+  backdrop-filter:blur(6px);
+  transition:transform .25s ease, box-shadow .25s ease;
   opacity:0;
-  transition:opacity .6s ease, transform .6s ease;
   will-change:transform,left,top;
+  cursor:pointer;
 }
 
 .tag{
-  padding:0;
-  background:transparent;
-  font-weight:650;
-  font-size:11px;
-  white-space:nowrap;
-  opacity:.24;
-  text-shadow:0 10px 22px rgba(0,0,0,.08);
+  font-size:12px;
+  font-weight:600;
 }
 
 .emojiFloat{
   font-size:16px;
-  opacity:.22;
-  filter:drop-shadow(0 10px 16px rgba(0,0,0,.08));
 }
 
 .tag.show, .emojiFloat.show{
   opacity:1;
-  transform:translate(-50%,-50%) scale(1);
 }
 
-@media (max-width:520px){
-  .card{ padding:22px; }
-  h1{ font-size:28px; }
-  .giftTitle{ font-size:26px; }
-  .giftImage img{ max-height:160px; }
-  .tag{ font-size:10px; }
-  .emojiFloat{ font-size:15px; }
+.tag:hover,
+.emojiFloat:hover{
+  transform:translate(-50%,-50%) scale(1.12);
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
 }
+
+/* ========================= */
 </style>
 </head>
 
 <body>
 
-<canvas id="confetti"></canvas>
+<div class="card">
 
-<div class="card" id="card">
+  <div class="slide giftSlide active" id="giftSlide">
 
-  <!-- SLIDE 0 -->
-  <div class="slide active">
-    <div class="heroImage">
-      <img id="imgHero" alt="">
-    </div>
-    <h1>Happy Birthday ma chérie 🎉</h1>
-    <p>Même si tu es loin, on voulait célébrer ce moment avec toi!</p>
-    <button onclick="next()">Débloque la suite 🔓</button>
-  </div>
-
-  <!-- SLIDE 1 -->
-  <div class="slide">
-    <h1>💞 De la part de</h1>
-    <p>Lucie, Anthony, Chloé & Hortense.</p>
-
-    <div class="photoBox square">
-      <img id="imgGroup" alt="">
-    </div>
-
-    <button onclick="next()">Débloque la suite 🔓</button>
-  </div>
-
-  <!-- SLIDE 2 -->
-  <div class="slide">
-    <p>
-      On pense à toi, et on veut que tu te détendes...<br><br>
-      Donc pour tes <b>27 ans</b>, on te souhaite.... :<br>
-      <b>un crâne bien détendu.</b> (pas toi après le soin ➡️ 💀)
-    </p>
-
-    <div class="photoBox" style="margin-top:18px;">
-      <img id="imgOhlala" alt="">
-    </div>
-
-    <button onclick="burstAndNext()">Débloque ton cadeau 🎁</button>
-  </div>
-
-  <!-- SLIDE 3 (GIFT) -->
-  <div class="slide giftSlide" id="giftSlide">
-
-    <!-- floating layer (background) -->
     <div class="floatZone" id="floatZone"></div>
 
-    <!-- content layer -->
     <div class="giftContent">
       <div class="giftTitle">
-        💆‍♀️ <span class="wiggle">Une Séance de Head Spa</span> 🌟
+        💆‍♀️ Une Séance de Head Spa 🌟
       </div>
 
-      <!-- ✅ photo space on last page -->
+      <!-- ESPACE IMAGE PNG SANS FOND -->
       <div class="giftImage">
-        <img id="imgToiBientot" alt="">
+        <img id="imgToiBientot" src="toibientot.png" alt="">
       </div>
 
       <div class="giftPill">
         Une séance complète incluant détente profonde et soin capillaire.
       </div>
 
-      <div class="giftFootnote">
-        Merci de contacter <b>Mme Lucie Dubourdieu</b> pour récupérer votre lot 👮‍♂️
-      </div>
     </div>
 
   </div>
@@ -297,297 +169,15 @@ button:hover{ transform:translateY(-2px); }
 </div>
 
 <script>
-/* =========================
-   MEDIA FALLBACKS
-   - tries: root then /images/
-   - tries: .png, .jpg, .jpeg if you give base name
-   ========================= */
-const MEDIA = {
-  bases: ["", "images/"],
-  bg: "bg",
-  hero: "monanniversaire",
-  group: "lessurvivors",
-  ohlala: "ohlala",
-  toibientot: "toibientot"
-};
-const EXT = [".png",".jpg",".jpeg"];
-
-function tryLoad(url){
-  return new Promise((resolve,reject)=>{
-    const img = new Image();
-    img.onload = ()=>resolve(url);
-    img.onerror = ()=>reject(url);
-    img.src = url;
-  });
-}
-
-async function setImgSmart(id, name){
-  const el = document.getElementById(id);
-  if(!el) return;
-
-  const hasExt = /\.[a-zA-Z0-9]{3,4}$/.test(name);
-
-  for(const base of MEDIA.bases){
-    if(hasExt){
-      const url = base + name;
-      try{ await tryLoad(url); el.src = url; return; }catch(e){}
-    }else{
-      for(const ext of EXT){
-        const url = base + name + ext;
-        try{ await tryLoad(url); el.src = url; return; }catch(e){}
-      }
-    }
-  }
-}
-
-async function setBgSmart(name){
-  const hasExt = /\.[a-zA-Z0-9]{3,4}$/.test(name);
-
-  for(const base of MEDIA.bases){
-    if(hasExt){
-      const url = base + name;
-      try{ await tryLoad(url); document.documentElement.style.setProperty("--bgImg", `url("${url}")`); return; }catch(e){}
-    }else{
-      for(const ext of EXT){
-        const url = base + name + ext;
-        try{ await tryLoad(url); document.documentElement.style.setProperty("--bgImg", `url("${url}")`); return; }catch(e){}
-      }
-    }
-  }
-}
-
-(async function initMedia(){
-  await setBgSmart(MEDIA.bg);
-  await setImgSmart("imgHero", MEDIA.hero);
-  await setImgSmart("imgGroup", MEDIA.group);
-  await setImgSmart("imgOhlala", MEDIA.ohlala);
-  await setImgSmart("imgToiBientot", MEDIA.toibientot);
-})();
 
 /* =========================
-   CONFETTI ENGINE
-   - continuous: strong slide 0, soft after
-   - burst: on gift button click (sparkles+confetti)
+   FLOAT ENGINE (SANS AIMANT)
    ========================= */
-const Confetti = (function(){
-  const c = document.getElementById("confetti");
-  const ctx = c.getContext("2d");
-  const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
 
-  function resize(){
-    c.width = Math.floor(window.innerWidth * DPR);
-    c.height = Math.floor(window.innerHeight * DPR);
-    c.style.width = window.innerWidth + "px";
-    c.style.height = window.innerHeight + "px";
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-  }
-  window.addEventListener("resize", resize);
-  resize();
-
-  const colors = ["#E35619","#FFBDF8","#ffd166","#06d6a0","#118ab2","#9b5de5"];
-  const pieces = [];
-  const MAX = 200;
-
-  // continuous mode
-  let activeCount = 180;
-  let alpha = 0.95;
-  let speedMult = 1.0;
-  let windMult = 1.0;
-
-  function spawnTop(){
-    return {
-      kind:"confetti",
-      x: Math.random()*window.innerWidth,
-      y: -20 - Math.random()*window.innerHeight*0.35,
-      r: 3 + Math.random()*4,
-      w: 6 + Math.random()*8,
-      h: 8 + Math.random()*12,
-      vy: 1.4 + Math.random()*3.6,
-      vx: -0.9 + Math.random()*1.8,
-      rot: Math.random()*Math.PI*2,
-      vr: (-0.10 + Math.random()*0.20),
-      color: colors[(Math.random()*colors.length)|0],
-      shape: Math.random() < 0.55 ? "rect" : "circle",
-      life: Infinity
-    };
-  }
-
-  // burst particles
-  const bursts = [];
-  function spawnBurst(x,y,type){
-    const n = type === "sparkle" ? 70 : 120;
-    for(let i=0;i<n;i++){
-      const ang = Math.random()*Math.PI*2;
-      const spd = (type === "sparkle" ? 2.2 : 2.8) + Math.random()*(type==="sparkle"?3.0:4.2);
-      bursts.push({
-        kind:type,
-        x, y,
-        vx: Math.cos(ang)*spd,
-        vy: Math.sin(ang)*spd - (type==="sparkle"?1.0:0.2),
-        rot: Math.random()*Math.PI*2,
-        vr: (-0.25 + Math.random()*0.5),
-        size: type==="sparkle" ? (1.5+Math.random()*2.5) : (3+Math.random()*5),
-        w: type==="sparkle" ? (2+Math.random()*3) : (5+Math.random()*7),
-        h: type==="sparkle" ? (2+Math.random()*3) : (7+Math.random()*10),
-        color: type==="sparkle" ? "rgba(255,255,255,.95)" : colors[(Math.random()*colors.length)|0],
-        shape: type==="sparkle" ? "star" : (Math.random()<0.55?"rect":"circle"),
-        life: type==="sparkle" ? (26+Math.random()*12) : (34+Math.random()*18)
-      });
-    }
-  }
-
-  function burstAtClientXY(clientX, clientY){
-    const x = clientX;
-    const y = clientY - 10;
-    spawnBurst(x,y,"sparkle");
-    spawnBurst(x,y,"confetti");
-  }
-
-  for(let i=0;i<MAX;i++) pieces.push(spawnTop());
-
-  function setMode(mode){
-    if(mode === 0){
-      activeCount = 180; alpha = 0.95; speedMult = 1.00; windMult = 1.00;
-    }else{
-      activeCount = 70;  alpha = 0.28; speedMult = 0.45; windMult = 0.55;
-    }
-  }
-
-  let target = {activeCount, alpha, speedMult, windMult};
-  function setModeSoft(mode){
-    setMode(mode);
-    target = {activeCount, alpha, speedMult, windMult};
-  }
-  function lerp(a,b,t){ return a + (b-a)*t; }
-
-  function step(){
-    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
-
-    // ease continuous
-    activeCount = Math.round(lerp(activeCount, target.activeCount, 0.08));
-    alpha      = lerp(alpha,      target.alpha,      0.08);
-    speedMult  = lerp(speedMult,  target.speedMult,  0.08);
-    windMult   = lerp(windMult,   target.windMult,   0.08);
-
-    // draw continuous
-    for(let i=0;i<activeCount;i++){
-      const p = pieces[i];
-
-      p.x += p.vx * windMult;
-      p.y += p.vy * speedMult;
-      p.rot += p.vr;
-      p.vx += Math.sin(p.y*0.01 + p.rot) * 0.012 * windMult;
-
-      if(p.y > window.innerHeight + 40){
-        pieces[i] = spawnTop();
-      }
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot);
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = p.color;
-
-      if(p.shape === "rect"){
-        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-      }else{
-        ctx.beginPath();
-        ctx.arc(0,0,p.r,0,Math.PI*2);
-        ctx.fill();
-      }
-      ctx.restore();
-    }
-
-    // draw bursts
-    for(let i=bursts.length-1;i>=0;i--){
-      const b = bursts[i];
-      b.life -= 1;
-
-      b.vx *= 0.985;
-      b.vy *= 0.985;
-      b.vy += (b.kind==="sparkle" ? 0.06 : 0.09);
-
-      b.x += b.vx;
-      b.y += b.vy;
-      b.rot += b.vr;
-
-      const fade = Math.max(0, Math.min(1, b.life / 30));
-      ctx.save();
-      ctx.translate(b.x, b.y);
-      ctx.rotate(b.rot);
-      ctx.globalAlpha = b.kind==="sparkle" ? (0.9*fade) : (0.95*fade);
-
-      if(b.shape === "star"){
-        ctx.fillStyle = b.color;
-        ctx.beginPath();
-        ctx.moveTo(0, -b.size*2);
-        ctx.lineTo(b.size*0.7, -b.size*0.7);
-        ctx.lineTo(b.size*2, 0);
-        ctx.lineTo(b.size*0.7, b.size*0.7);
-        ctx.lineTo(0, b.size*2);
-        ctx.lineTo(-b.size*0.7, b.size*0.7);
-        ctx.lineTo(-b.size*2, 0);
-        ctx.lineTo(-b.size*0.7, -b.size*0.7);
-        ctx.closePath();
-        ctx.fill();
-      }else if(b.shape === "rect"){
-        ctx.fillStyle = b.color;
-        ctx.fillRect(-b.w/2, -b.h/2, b.w, b.h);
-      }else{
-        ctx.fillStyle = b.color;
-        ctx.beginPath();
-        ctx.arc(0,0,b.size,0,Math.PI*2);
-        ctx.fill();
-      }
-      ctx.restore();
-
-      if(b.life <= 0 || b.y > window.innerHeight + 60){
-        bursts.splice(i,1);
-      }
-    }
-
-    requestAnimationFrame(step);
-  }
-  step();
-
-  return { setModeSoft, burstAtClientXY };
-})();
-
-/* =========================
-   SLIDES
-   ========================= */
-let current=0;
-const slides=document.querySelectorAll(".slide");
-Confetti.setModeSoft(0);
-
-function next(){
-  slides[current].classList.remove("active");
-  current++;
-  slides[current].classList.add("active");
-  Confetti.setModeSoft(current >= 1 ? 1 : 0);
-  if(slides[current].id==="giftSlide") startFloat();
-}
-
-/* burst confettis + paillettes, then go next */
-function burstAndNext(){
-  const btn = event?.currentTarget;
-  if(btn){
-    const r = btn.getBoundingClientRect();
-    Confetti.burstAtClientXY(r.left + r.width/2, r.top + r.height/2);
-  }else{
-    Confetti.burstAtClientXY(window.innerWidth/2, window.innerHeight/2);
-  }
-  setTimeout(()=>next(), 260);
-}
-
-/* =========================
-   FLOAT ENGINE (subtle, everywhere, but NEVER over reading zones)
-   ========================= */
 const items=[
   "Bain des pieds prélassant aux herbes",
   "Massage relaxant Guasha",
-  "Stimulation avec accessoires",
-  "Anneau doré + infusion chaude",
+  "Stimulation avec accessoires 😉",
   "Nettoyage / Exfoliation",
   "Serviette crépitante & Shiatsu Bambou",
   "Masque hydratant sous vapeur",
@@ -596,12 +186,9 @@ const items=[
   "Étirements serviette chaude"
 ];
 
-const baseEmojis=["🧖‍♀️","🍃","🧘‍♀️","☁️","🤍"];
-const emojis = baseEmojis.flatMap(e => [e,e]); // 10
+const emojis=["🧖‍♀️","🍃","🧘‍♀️","☁️","🤍"];
 
-let started=false;
 const blobs=[];
-const pointer={x:-9999,y:-9999,active:false};
 
 function rand(a,b){return Math.random()*(b-a)+a;}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
@@ -614,131 +201,56 @@ function shuffle(arr){
 }
 
 function startFloat(){
-  if(started) return;
-  started=true;
 
   const zone=document.getElementById("floatZone");
 
-  zone.addEventListener("mousemove",e=>{
-    const r=zone.getBoundingClientRect();
-    pointer.x=((e.clientX-r.left)/r.width)*100;
-    pointer.y=((e.clientY-r.top)/r.height)*100;
-    pointer.active=true;
-  });
-  zone.addEventListener("mouseleave",()=>pointer.active=false);
-
-  // Forbidden zones: title+image+pill area + footnote area
-  const FORBIDDEN = [
-    {x1:10, x2:90, y1:10, y2:64}, // title + image + main pill
-    {x1:10, x2:90, y1:82, y2:98}  // footnote
+  const entries=[
+    ...items.map(t=>({type:"tag",text:t})),
+    ...emojis.map(e=>({type:"emojiFloat",text:e}))
   ];
-
-  function insideRect(x,y,r){
-    return x>=r.x1 && x<=r.x2 && y>=r.y1 && y<=r.y2;
-  }
-  function isForbidden(x,y){
-    return FORBIDDEN.some(r=>insideRect(x,y,r));
-  }
-
-  function pickSpawn(){
-    let x,y,tries=0;
-    do{
-      x = rand(4, 96);
-      y = rand(6, 94);
-      tries++;
-    }while(isForbidden(x,y) && tries<200);
-    return {x,y};
-  }
-
-  // entries (confetti-like, but subtle)
-  const entries=[];
-  items.forEach(t => entries.push({type:"tag", text:t}));
-  emojis.forEach(e => entries.push({type:"emojiFloat", text:e}));
-  items.slice(0,6).forEach(t => entries.push({type:"tag", text:t}));
-  baseEmojis.forEach(e => entries.push({type:"emojiFloat", text:e}));
 
   shuffle(entries);
 
-  function create(entry,i){
+  entries.forEach((entry,i)=>{
     const el=document.createElement("div");
     el.className=entry.type;
     el.textContent=entry.text;
     zone.appendChild(el);
 
-    const s = pickSpawn();
-    const obj={
+    const x=rand(5,95);
+    const y=rand(8,92);
+
+    blobs.push({
       el,
-      baseX:s.x, baseY:s.y,
-      x:s.x, y:s.y,
-      vx:0, vy:0,
-      phase:rand(0,Math.PI*2),
-      drift:rand(0.08,0.18)
-    };
+      baseX:x,
+      baseY:y,
+      phase:rand(0,Math.PI*2)
+    });
 
-    blobs.push(obj);
-    setTimeout(()=>el.classList.add("show"), 140 + i*28);
-  }
+    setTimeout(()=>el.classList.add("show"), 120+i*40);
+  });
 
-  entries.forEach((entry,i)=>create(entry,i));
   animate();
 }
 
 function animate(){
   requestAnimationFrame(animate);
-  const t = performance.now();
-
-  const FORBIDDEN = [
-    {x1:10, x2:90, y1:10, y2:64},
-    {x1:10, x2:90, y1:82, y2:98}
-  ];
-
-  function insideRect(x,y,r){
-    return x>=r.x1 && x<=r.x2 && y>=r.y1 && y<=r.y2;
-  }
-  function isForbidden(x,y){
-    return FORBIDDEN.some(r=>insideRect(x,y,r));
-  }
+  const t=performance.now();
 
   blobs.forEach(b=>{
-    const levX = Math.sin(t*0.001 + b.phase) * (0.35 * (b.drift*10));
-    const levY = Math.cos(t*0.0011 + b.phase) * (0.26 * (b.drift*10));
+    const levX=Math.sin(t*0.001+b.phase)*1.6;
+    const levY=Math.cos(t*0.0012+b.phase)*1.3;
 
-    const targetX = b.baseX + levX;
-    const targetY = b.baseY + levY;
+    const x=clamp(b.baseX+levX,5,95);
+    const y=clamp(b.baseY+levY,8,92);
 
-    b.vx += (targetX - b.x) * 0.018;
-    b.vy += (targetY - b.y) * 0.018;
-
-    if(pointer.active){
-      const dx=b.x-pointer.x;
-      const dy=b.y-pointer.y;
-      const dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist < 18){
-        const safe = Math.max(dist, 0.001);
-        b.vx += (dx/safe) * 0.30;
-        b.vy += (dy/safe) * 0.30;
-      }
-    }
-
-    b.vx *= 0.92;
-    b.vy *= 0.92;
-    b.x += b.vx;
-    b.y += b.vy;
-
-    b.x = clamp(b.x, 4, 96);
-    b.y = clamp(b.y, 6, 94);
-
-    if(isForbidden(b.x,b.y)){
-      b.x = rand(4,96);
-      b.y = rand(6,94);
-      b.baseX = b.x;
-      b.baseY = b.y;
-    }
-
-    b.el.style.left = b.x + "%";
-    b.el.style.top  = b.y + "%";
+    b.el.style.left=x+"%";
+    b.el.style.top=y+"%";
   });
 }
+
+startFloat();
+
 </script>
 
 </body>
