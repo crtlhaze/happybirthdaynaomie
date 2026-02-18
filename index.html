@@ -779,47 +779,6 @@ function startEmojiFloat(){
     });
   })();
 }
-
-/* =========================
-   GIFT PAGE - ONE LINE LOOP (SLOW)
-   ========================= */
-let loopStarted=false;
-function startLoop(){
-  if(loopStarted) return;
-  loopStarted=true;
-
-  const options = [
-    "Nettoyage / Exfoliation",
-    "Masque hydratant sous vapeur",
-    "Massage relaxant Guasha",
-    "Serviette crépitante & Shiatsu Bambou",
-    "Gelée capillaire Aloe",
-    "Étirements serviette chaude",
-    "Stimulation avec accessoires 😉",
-    "Modelage bras Hot Stone",
-    "Bain des pieds prélassant aux herbes"
-  ];
-
-  const el = document.getElementById("loopText");
-  if(!el) return;
-
-  let i = 0;
-
-  const showOne = () => {
-    el.classList.remove("show");
-    setTimeout(()=>{
-      el.textContent = options[i];
-      el.classList.add("show");
-      i = (i + 1) % options.length;
-    }, 260);
-  };
-
-  el.textContent = options[0];
-  el.classList.add("show");
-  i = 1;
-
-  setInterval(showOne, 2800); /* ✅ slower */
-}
 </script>
 
 </body>
