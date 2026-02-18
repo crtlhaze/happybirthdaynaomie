@@ -214,7 +214,7 @@ button:hover{ transform:translateY(-2px); }
   background:transparent;
 }
 
-/* ✅ pill NON transparent + phrase modifiée */
+/* ✅ pill NON transparent + rose */
 .giftPill{
   width:min(720px,94%);
   margin:0 auto;
@@ -222,8 +222,9 @@ button:hover{ transform:translateY(-2px); }
   border-radius:999px;
   background:#fff;
   box-shadow:0 16px 55px rgba(0,0,0,.12);
-  font-weight:900;
+  font-weight:1000;
   opacity:1;
+  color:#FFBDF8; /* ✅ rose */
 }
 
 /* ✅ ONE SPOT, ONE LINE, LOOPING */
@@ -704,6 +705,7 @@ function countdownToGift(e){
 
 /* =========================
    GIFT PAGE - EMOJI FLOAT ONLY
+   ✅ each emoji 5x
    ========================= */
 let emojiStarted=false;
 const emojiBlobs=[];
@@ -716,7 +718,13 @@ function startEmojiFloat(){
   emojiStarted=true;
 
   const zone = document.getElementById("floatZone");
-  const emojis = ["🧖‍♀️","🍃","🧘‍♀️","☁️","🌿","🤍"];
+
+  const base = ["🧖‍♀️","🍃","🧘‍♀️","☁️","🌿","🤍"];
+  const emojis = [];
+  base.forEach(e=>{
+    for(let k=0;k<5;k++) emojis.push(e); // ✅ 5 fois chacun
+  });
+
   const isMobile = window.matchMedia("(max-width:520px)").matches;
 
   emojis.forEach((emo,i)=>{
@@ -725,12 +733,9 @@ function startEmojiFloat(){
     el.textContent = emo;
     zone.appendChild(el);
 
-    const side = Math.floor(Math.random()*4);
-    let x,y;
-    if(side===0){ x=rand(5,95); y=rand(4,10); }
-    if(side===1){ x=rand(5,95); y=rand(90,96); }
-    if(side===2){ x=rand(4,10); y=rand(10,90); }
-    if(side===3){ x=rand(90,96); y=rand(10,90); }
+    // spread everywhere with random spawn
+    const x = rand(3, 97);
+    const y = rand(3, 97);
 
     const blob = {
       el,
@@ -738,23 +743,24 @@ function startEmojiFloat(){
       x, y,
       vx:0, vy:0,
       phase:rand(0,Math.PI*2),
-      size: rand(isMobile?16:18, isMobile?22:26)
+      drift:rand(0.6, 1.5),
+      size: rand(isMobile?14:16, isMobile?18:22)
     };
 
     el.style.fontSize = blob.size + "px";
     emojiBlobs.push(blob);
-    setTimeout(()=>el.classList.add("show"), 160 + i*70);
+    setTimeout(()=>el.classList.add("show"), 120 + i*14);
   });
 
   (function animate(){
     requestAnimationFrame(animate);
     const t = performance.now();
     const isMobileNow = window.matchMedia("(max-width:520px)").matches;
-    const amp = isMobileNow ? 1.0 : 1.4;
+    const amp = isMobileNow ? 0.9 : 1.25;
 
     emojiBlobs.forEach(b=>{
-      const levX = Math.sin(t*0.001 + b.phase) * (amp * 1.1);
-      const levY = Math.cos(t*0.0011 + b.phase) * (amp * 0.9);
+      const levX = Math.sin(t*0.001 + b.phase) * (amp * 1.1 * b.drift);
+      const levY = Math.cos(t*0.0011 + b.phase) * (amp * 0.9 * b.drift);
 
       const targetX = b.baseX + levX;
       const targetY = b.baseY + levY;
@@ -765,8 +771,8 @@ function startEmojiFloat(){
       b.vx *= 0.90; b.vy *= 0.90;
       b.x += b.vx;  b.y += b.vy;
 
-      b.x = clamp(b.x, 3, 97);
-      b.y = clamp(b.y, 3, 97);
+      b.x = clamp(b.x, 2, 98);
+      b.y = clamp(b.y, 2, 98);
 
       b.el.style.left = b.x + "%";
       b.el.style.top  = b.y + "%";
@@ -775,7 +781,7 @@ function startEmojiFloat(){
 }
 
 /* =========================
-   GIFT PAGE - ONE LINE LOOP (SLOWER ✅)
+   GIFT PAGE - ONE LINE LOOP (SLOW)
    ========================= */
 let loopStarted=false;
 function startLoop(){
@@ -812,8 +818,7 @@ function startLoop(){
   el.classList.add("show");
   i = 1;
 
-  // ✅ slower: was 1400ms -> now 2600ms
-  setInterval(showOne, 2600);
+  setInterval(showOne, 2800); /* ✅ slower */
 }
 </script>
 
