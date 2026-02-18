@@ -227,47 +227,9 @@ button:hover{ transform:translateY(-2px); }
   color:#FFBDF8; /* ✅ rose */
 }
 
-/* ✅ ONE SPOT, ONE LINE, LOOPING */
-.loopArea{
-  width:min(720px,94%);
-  margin:12px auto 0;
-  display:flex;
-  justify-content:center;
-}
-.loopPill{
-  width:100%;
-  background:#fff;
-  border-radius:999px;
-  padding:12px 16px;
-  box-shadow:0 14px 35px rgba(0,0,0,.10);
-  font-weight:900;
-  font-size:15px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:44px;
-  position:relative;
-  overflow:hidden;
-}
-.loopText{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:0 18px;
-  opacity:0;
-  transform:translateY(10px);
-  transition:opacity .35s ease, transform .35s ease;
-}
-.loopText.show{
-  opacity:1;
-  transform:translateY(0);
-}
-
 /* footnote */
 .giftFootnote{
-  margin-top:12px;
+  margin-top:10px; /* ✅ remonte (suppression de l'espace "options") */
   font-size:14px;
   font-weight:900;
   color:#E35619;
@@ -296,7 +258,6 @@ button:hover{ transform:translateY(-2px); }
   .giftTitle{ font-size:22px; }
   .giftImage img{ max-height:clamp(220px, 40vh, 380px); }
   .giftPill{ border-radius:22px; padding:14px 14px; font-size:15px; }
-  .loopPill{ border-radius:18px; font-size:14px; }
   .countNum{ font-size:64px; }
 }
 </style>
@@ -371,11 +332,7 @@ button:hover{ transform:translateY(-2px); }
         Une séance complète incluant détente profonde et soin capillaire pour ton petit crâne délicat.
       </div>
 
-      <div class="loopArea">
-        <div class="loopPill" aria-live="polite" aria-atomic="true">
-          <div class="loopText show" id="loopText"></div>
-        </div>
-      </div>
+      <!-- ✅ OPTIONS SUPPRIMÉES (loopArea / loopPill) -->
 
       <div class="giftFootnote">
         Merci de contacter <b>Mme Lucie Dubourdieu</b> pour récupérer votre lot 👮‍♂️
@@ -641,7 +598,6 @@ function next(){
 
   if(slides[current].id === "giftSlide"){
     startEmojiFloat();
-    startLoop();
   }
 }
 
@@ -733,7 +689,6 @@ function startEmojiFloat(){
     el.textContent = emo;
     zone.appendChild(el);
 
-    // spread everywhere with random spawn
     const x = rand(3, 97);
     const y = rand(3, 97);
 
